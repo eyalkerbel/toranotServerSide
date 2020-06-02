@@ -40,10 +40,7 @@ app.use(cors({origin:true,credentials: true}));
 
 //logs in
 
-app.get("/", (req,res) => {
-console.log("sdjdsj");
-res.sendFile(<html><head>asksak</head></html>);
-});
+
 
 app.post("/api/checkuser", (req, res) => {
   console.log("hi");
