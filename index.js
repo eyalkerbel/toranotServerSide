@@ -43,7 +43,7 @@ app.use(cors({origin:true,credentials: true}));
 
 
 app.post("/api/checkuser", (req, res) => {
-  console.log("hi");
+  console.log("hiii");
   console.log(req.body);
   checkUser(url, MongoClient, req, res);
 });
