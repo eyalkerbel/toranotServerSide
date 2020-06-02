@@ -1,0 +1,31 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "server for shifts",
+  "main": "index.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "joi": "^14.3.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.3.2",
+    "concurrently": "^4.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.2",
+    "concurrently": "^4.0.1"
+  },
+  "scripts": {
+    "test": "test",
+    "client": "cd .. && cd toranotForntedSide && yarn start",
+    "start": "node index.js"
+  },
+  "author": "benji",
+  "license": "ISC",
+  "engines": {
+    "node": "12.16.1",
+    "npm": "6.13.7",
+     "yarn":" 1.22.4",
+     "nodemon": "2.0.4"
+  }
+}
