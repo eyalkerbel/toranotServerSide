@@ -8,12 +8,11 @@
     "express": "^4.17.1",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.3.2",
-    "concurrently": "^4.0.1"
+    "mongodb": "^3.3.2"
   },
   "devDependencies": {
-    "nodemon": "^1.19.2",
-    "concurrently": "^4.0.1"
+    "concurrently": "^4.1.2",
+    "nodemon": "^1.19.2"
   },
   "scripts": {
     "test": "test",
@@ -25,7 +24,7 @@
   "engines": {
     "node": "12.16.1",
     "npm": "6.13.7",
-     "yarn":" 1.22.4",
-     "nodemon": "2.0.4"
+    "yarn": " 1.22.4",
+    "nodemon": "2.0.4"
   }
 }
