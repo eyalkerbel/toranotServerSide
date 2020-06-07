@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-function getHaadafot(url, MongoClient, req, res) {
+function getPersonData(url, MongoClient, req, res) {
   var BearerHeader = req.headers["authorization"];
   var splitted = BearerHeader.split(" ");
   jwt.verify(splitted[1], "iamthesecretkey", (err, verified) => {
@@ -8,10 +8,11 @@ function getHaadafot(url, MongoClient, req, res) {
       res.status(400).json("invalid jwt")
       return;
     }
-    console.log(verified);
+    console.log("person data",verified);
     var obi = verified.payload;
-    var userid = obi.userid;
-    console.log("userid hadd",userid);
+    console.log(obi);
+    var userid = obi._id;
+    console.log("userid",userid);
     MongoClient.connect(
       url,
       {
@@ -20,19 +21,19 @@ function getHaadafot(url, MongoClient, req, res) {
       },
       function (err, db) {
         if (err) throw err;
-        var dbo = db.db("newmaindb");
+        var dbo = db.db("toranot");
         dbo
-          .collection("haadafottest")
+          .collection("users")
           .find({
             userid
           })
           .toArray(function (err, result) {
             if (result.length === 0) {
               console.log("lookup failed");
-              res.status(200).send(result);
+              console.log(result,obi);
+              res.status(200).send(obi);
             } else {
-              //       console.log(result);
-              res.status(200).json(result);
+                  res.status(200).json(obi);
               db.close();
             }
           });
@@ -41,4 +42,4 @@ function getHaadafot(url, MongoClient, req, res) {
   });
 }
 
-module.exports = getHaadafot;
+module.exports = getPersonData;

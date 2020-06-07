@@ -26,7 +26,7 @@ function checkUser(url, MongoClient, req, res) {
       function (err, db) {
         if (err) throw err;
         console.log("dbo")
-        var dbo = db.db("toranot")
+        var dbo = db.db("toranot");
         console.log(username);
         dbo.collection("users").find({sn:username}).toArray(function (err, result) {
             console.log(result);
@@ -45,7 +45,14 @@ function checkUser(url, MongoClient, req, res) {
                       token: token,
                       permissionlvl: permissionlvl
                     };
-                    res.status(200).json({ newpayload });
+                    const details = {
+                      name: result[0].name,
+                      sn: result[0].sn,
+                      password: result[0].password,
+                      password2: result[0].password2
+                    }
+                    console.log("newpayload",newpayload)
+                    res.status(200).json({ newpayload,details });
                   }
                 );
               } else {

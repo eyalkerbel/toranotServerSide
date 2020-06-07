@@ -18,7 +18,8 @@ const getUsersAndToranuts = require("./modules/getUsersAndToranuts");
 const setToranutThisMonth = require("./modules/setToranutThisMonth");
 const deleteToranutThisMonth = require("./modules/deleteToranutThisMonth")
 const setToranutNextMonth = require("./modules/setToranutNextMonth");
-const deleteToranutNextMonth = require("./modules/deleteToranutNextMonth")
+const deleteToranutNextMonth = require("./modules/deleteToranutNextMonth");
+const getPersonData = require("./modules/getPersonData");
 //middleware for json
 app.use(express.json());
 //middleware for allowing fetch from different port 
@@ -43,7 +44,7 @@ app.use(cors({origin:true,credentials: true}));
 
 
 app.post("/api/checkuser", (req, res) => {
-  console.log("hiii");
+  console.log("hi");
   console.log(req.body);
   checkUser(url, MongoClient, req, res);
 });
@@ -57,6 +58,10 @@ app.post("/api/createuser", (req, res) => {
 //gets this months toranuts and verifies
 app.post("/api/getthismonthstoranuts", (req, res) => {
   getThisMonthsToranuts(url, MongoClient, req, res);
+});
+
+app.post("/api/getpersondata", (req,res) => {
+  getPersonData(url,MongoClient,req,res);
 });
 
 app.post("/api/settoranutthismonth", (req, res) => {

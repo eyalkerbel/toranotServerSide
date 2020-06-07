@@ -8,7 +8,8 @@
     "express": "^4.17.1",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.3.2"
+    "mongodb": "^3.3.2",
+    "react-redux": "^7.2.0"
   },
   "devDependencies": {
     "concurrently": "^4.0.1 ",
@@ -17,7 +18,9 @@
   "scripts": {
     "test": "test",
     "client": "cd .. && cd toranotForntedSide && yarn start",
-    "start": "node index.js"
+    "start": "node index.js",
+    "server": "nodemon index.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
   "author": "benji",
   "license": "ISC",
