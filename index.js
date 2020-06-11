@@ -69,7 +69,7 @@ app.post("/api/getpersondata", (req,res) => {
   getPersonData(url,MongoClient,req,res);
 });
 
-app.post("/api/settoranutthismonth", (req, res) => {
+app.post("/settoranutthismonth", (req, res) => {
   setToranutThisMonth(url, MongoClient, req, res);
 });
 
