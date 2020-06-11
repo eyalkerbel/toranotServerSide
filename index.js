@@ -20,6 +20,8 @@ const deleteToranutThisMonth = require("./modules/deleteToranutThisMonth")
 const setToranutNextMonth = require("./modules/setToranutNextMonth");
 const deleteToranutNextMonth = require("./modules/deleteToranutNextMonth");
 const getPersonData = require("./modules/getPersonData");
+const register = require("./modules/register");
+const getHaadafotByUser = require("./modules/getHaadafotByUser");
 //middleware for json
 app.use(express.json());
 //middleware for allowing fetch from different port 
@@ -48,7 +50,10 @@ app.post("/api/checkuser", (req, res) => {
   console.log(req.body);
   checkUser(url, MongoClient, req, res);
 });
-
+app.post("/api/registeruser", (req,res) => {
+  console.log("registekxkr");
+register(url,MongoClient,req,res);
+});
 //not finished create user
 app.post("/api/createuser", (req, res) => {
   console.log("hi");
@@ -79,6 +84,11 @@ app.post("/api/settoranutnextmonth", (req, res) => {
 app.post("/api/deletetoranutnextmonth", (req, res) => {
   console.log(123)
   deleteToranutNextMonth(url, MongoClient, req, res);
+});
+
+app.post("/api/gethaadafotbyuser", (req,res) => {
+  console.log("gethaadafotbyuser");
+  getHaadafotByUser(url,MongoClient,req,res);
 });
 
 app.post("/api/getallthismonthstoranuts", (req, res) => {

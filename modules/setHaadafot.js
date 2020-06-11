@@ -11,18 +11,19 @@ function setHaadafot(url, MongoClient, req, res) {
     }
     console.log(verified);
     var obi = verified.payload;
+    console.log("obi", obi );
     var userid = obi.userid;
+    console.log(userid);
     var arriOfHaadafot = req.body;
-
     const schema = Joi.array()
-
     const ValidOrNot = Joi.validate(arriOfHaadafot, schema);
     console.log(ValidOrNot)
     if (ValidOrNot.error === null) {
+      console.log("hadafot",arriOfHaadafot);
       arriOfHaadafot.forEach(element => {
         element.userid = userid;
       });
-      console.log(arriOfHaadafot);
+     // console.log(arriOfHaadafot);
       MongoClient.connect(
         url,
         {

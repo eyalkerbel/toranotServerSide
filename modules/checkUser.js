@@ -26,17 +26,17 @@ function checkUser(url, MongoClient, req, res) {
       function (err, db) {
         if (err) throw err;
         console.log("dbo")
-        var dbo = db.db("toranot");
+        var dbo = db.db("newmaindb");
         console.log(username);
-        dbo.collection("users").find({sn:username}).toArray(function (err, result) {
-            console.log(result);
+        dbo.collection("users").find({$or:[ {'userid':username}, {'sn':username}]}).toArray(function (err, result) {
+            console.log("result",result);
             if (result.length === 0) {
               console.log("login failed");
               res.status(400).send("None shall pass");
             } else {
               if (result[0].password === password) {
                 var permissionlvl = result[0].permissionlvl;
-                console.log("login successful");
+                console.log("login successful",permissionlvl);
                 jwt.sign(
                   { payload: result[0] },
                   "iamthesecretkey",

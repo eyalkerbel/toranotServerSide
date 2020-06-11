@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 function getAllThisMonthsToranuts(url, MongoClient, req, res) {
+    console.log("getAllThisMonthsToranuts server");
     var BearerHeader = req.headers["authorization"];
     var splitted = BearerHeader.split(" ");
     jwt.verify(splitted[1], "iamthesecretkey", (err, verified) => {
@@ -26,6 +27,7 @@ function getAllThisMonthsToranuts(url, MongoClient, req, res) {
                         if (result.length === 0) {
                             console.log("lookup failed");
                         } else {
+                            console.log("good get all toranot");
                             sendable.push(result);
                         }
                     });
@@ -35,6 +37,7 @@ function getAllThisMonthsToranuts(url, MongoClient, req, res) {
                     .toArray(function (err, result) {
                         if (result.length === 0) {
                             console.log("lookup failed");
+                            res.json(sendable)
                         } else {
                             sendable.push(result);
                             console.log(sendable)
