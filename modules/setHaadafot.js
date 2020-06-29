@@ -36,7 +36,7 @@ function setHaadafot(url, MongoClient, req, res) {
           dbo.collection("haadafottest").deleteMany({
             userid
           });
-          dbo.collection("haadafottest").insertMany(arriOfHaadafot);
+          dbo.collection("haadafottest").insert(arriOfHaadafot);
           db.close();
           res.status(200).json("challenge accepted");
         }

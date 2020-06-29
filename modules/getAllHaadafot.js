@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-function getHaadafot(url, MongoClient, req, res) {
+function getAllHaadafot(url, MongoClient, req, res) {
   var BearerHeader = req.headers["authorization"];
   var splitted = BearerHeader.split(" ");
   jwt.verify(splitted[1], "iamthesecretkey", (err, verified) => {
@@ -24,7 +24,6 @@ function getHaadafot(url, MongoClient, req, res) {
         dbo
           .collection("haadafottest")
           .find({
-            userid:userid
           })
           .toArray(function (err, result) {
             if (result.length === 0) {
@@ -41,4 +40,4 @@ function getHaadafot(url, MongoClient, req, res) {
   });
 }
 
-module.exports = getHaadafot;
+module.exports = getAllHaadafot;

@@ -22,6 +22,9 @@ const deleteToranutNextMonth = require("./modules/deleteToranutNextMonth");
 const getPersonData = require("./modules/getPersonData");
 const register = require("./modules/register");
 const getHaadafotByUser = require("./modules/getHaadafotByUser");
+const getAllHaadafot = require("./modules/getAllHaadafot");
+const getPiority = require("./modules/getPiority");
+const getPiorityByUser = require("./modules/getPiorityByUser");
 //middleware for json
 app.use(express.json());
 //middleware for allowing fetch from different port 
@@ -64,13 +67,22 @@ app.post("/api/createuser", (req, res) => {
 app.post("/api/getthismonthstoranuts", (req, res) => {
   getThisMonthsToranuts(url, MongoClient, req, res);
 });
+app.post("/api/getpioritybyuser", (req, res) => {
+  console.log("getpioritybyuserindex");
+  getPiorityByUser(url, MongoClient, req, res);
+});
 
 app.post("/api/getpersondata", (req,res) => {
   getPersonData(url,MongoClient,req,res);
 });
 
 app.post("/api/settoranutthismonth", (req, res) => {
+  console.log("settoranutthismonth");
   setToranutThisMonth(url, MongoClient, req, res);
+});
+
+app.post("/api/getallhaadafot", (req,res) => {
+  getAllHaadafot(url,MongoClient,req,res);
 });
 
 app.post("/api/deletetoranutthismonth", (req, res) => {
@@ -84,6 +96,10 @@ app.post("/api/settoranutnextmonth", (req, res) => {
 app.post("/api/deletetoranutnextmonth", (req, res) => {
   console.log(123)
   deleteToranutNextMonth(url, MongoClient, req, res);
+});
+
+app.post("/api/getpiority" , (req,res) => {
+  getPiority(url,MongoClient,req,res);
 });
 
 app.post("/api/gethaadafotbyuser", (req,res) => {

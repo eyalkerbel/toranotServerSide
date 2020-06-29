@@ -44,6 +44,9 @@ function getAllThisMonthsToranuts(url, MongoClient, req, res) {
                             res.json(sendable)
                         }
                     });
+                  //  var myPoints = data.points + 1;
+                    //console.log("POINTS",myPoints);
+                 //   dbo.collection("users").update({userid:data.userid},{'$set': {'points': myPoints}} , function(err){});
                 db.close();
 
             }

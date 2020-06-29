@@ -45,7 +45,7 @@ function getUsersAndToranuts(url, MongoClient, req, res) {
                                 sendable.push(result);
                             }
                         });
-                    ;
+                    
                     dbo.collection("toranutsnextmonth")
                         .find({})
                         .toArray(function (err, result) {
@@ -56,7 +56,16 @@ function getUsersAndToranuts(url, MongoClient, req, res) {
                             } else {
                                 sendable.push(result);
                                 console.log(sendable)
-                                res.json(sendable)
+                            }
+                        });
+                        dbo.collection("toranutsthismonth")
+                        .find({})
+                        .toArray(function (err, result) {
+                            if (result.length === 0) {
+                                console.log("lookup failed");
+                                sendable.push(result);
+                            } else {
+                                sendable.push(result);
                             }
                         });
                     db.close();
