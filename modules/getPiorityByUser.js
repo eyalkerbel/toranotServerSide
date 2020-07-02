@@ -1,6 +1,13 @@
 const jwt = require("jsonwebtoken");
 
 function getPiorityByUser(url, MongoClient, req, res) {
+
+
+    
+
+
+
+
     console.log("data",req.body);
     var userid = req.body.userid.userid;
     var haadfotPiorty = req.body.piority[0]; 
@@ -11,17 +18,51 @@ function getPiorityByUser(url, MongoClient, req, res) {
     console.log("index",index);
  //   var yhas = 100 / 3;
 
+    let haadafotUser = [];
+ MongoClient.connect(
+    url,
+    { useNewUrlParser: true, useUnifiedTopology: true },
+    function (err, db) {
+      if (err) throw err;
+      var dbo = db.db("newmaindb");
+      dbo
+        .collection("haadafottest")
+        .find({ userid })
+        .toArray(function (err, resultHaadafot) {
+            resultHaadafot.forEach(el => {
+            let date1 = new Date(el.begindate)
+            let date2 = new Date(el.enddate)
+            var startDay = date1.getDate()
+            var endDay = date2.getDate();
+            for(var i=startDay;i<=endDay-1;i++) {
+                haadafotUser.push(i);
+            }
+            });
+            db.close();
+          
+        });
+    }
+  );
+
 
     var prectange = ((index+1) / userPiorty.length)*100;
+    var totalSize = haadfotPiorty.length;
+
     if(prectange >=0 && prectange <= 34) {
-        userArray = haadfotPiorty.slice(1,10);
+        userArray = haadfotPiorty.slice(0,(totalSize/3) - 1);
     }
    else if(prectange > 34 && prectange <= 68) {
-        userArray = haadfotPiorty.slice(11,21);
+        userArray = haadfotPiorty.slice(totalSize/3,(totalSize/3*2)-1);
     }
     else {
-        userArray = haadfotPiorty.slice(21,31);
+        userArray = haadfotPiorty.slice((totalSize/3)*2,totalSize-1);
     }
+    for(var i=0;i<haadafotUser.length;i++) {
+        var index = newCounter.indexOf(haadafotUser[i]);
+        if (index !== -1) newCounter.splice(index, 1);
+    }
+
+
     console.log("userArray",userArray);
     res.send(userArray);
 
