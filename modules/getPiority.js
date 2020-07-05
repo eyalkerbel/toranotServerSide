@@ -36,6 +36,7 @@ const jwt = require("jsonwebtoken");
               if (result.length === 0) {
             
         } else {
+          console.log("occupiedDay",occupiedDay)
         var newCounter = await getPiorityDays(result,occupiedDay);
         var userPoirity = await getPiorityUsers(result);
         sendable.push(newCounter);
@@ -148,7 +149,6 @@ async function getPiorityDays(haadafot,occupiedDay) {
     if (index !== -1) newCounter.splice(index, 1);
   }
   console.log("newcounter",newCounter);
-
     return newCounter;
 
 }
