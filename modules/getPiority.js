@@ -36,13 +36,13 @@ const jwt = require("jsonwebtoken");
               if (result.length === 0) {
             
         } else {
-          console.log("occupiedDay",occupiedDay)
+         // console.log("occupiedDay",occupiedDay)
         var newCounter = await getPiorityDays(result,occupiedDay);
         var userPoirity = await getPiorityUsers(result);
         sendable.push(newCounter);
         sendable.push(userPoirity);
         res.json(sendable);
-        console.log("good");
+      //  console.log("good");
         db.close();
               }
             });
@@ -63,7 +63,7 @@ async function getPiorityUsers(haadafot) {
           count++;
       }
   });
-  console.log("users",users);
+ // console.log("users",users);
   var tempUsers = [];
   for(var i =0; i<users.length;i++) {
       tempUsers[i] = users[i];

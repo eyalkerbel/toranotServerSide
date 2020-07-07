@@ -25,31 +25,52 @@ function setToranutThisMonth(url, MongoClient, req, res) {
             })
             const ValidOrNot = Joi.validate(data, schema);
             if (ValidOrNot.error === null) {
+
+
                 MongoClient.connect(
                     url,
                     {
                         useNewUrlParser: true,
                         useUnifiedTopology: true
                     },
-                    function (err, db) {
+                     function (err, db) {
                         if (err) throw err;
                         var dbo = db.db("newmaindb");
-                        dbo.collection("toranutsthismonth").insertOne(data);
-                        console.log(data);
-                        var myPoints = data.points + 1;
-                        //console.log("POINTS",myPoints);
-                        dbo.collection("users").findOneAndUpdate({userid:data.userid}, { $inc: {'points': 1 } }, {new: true },function(err, response) {
-                            if (err) {
-                            console.log("error");
-                           } else {
-                               console.log("succsed",response);
-                           }
-                        }
-                        );
-                       // dbo.collection("toranutsthismonth").update({userid:data.userid},{'$set': {'points': myPoints}} , function(err){});
-                    
+                        var goodPlace = true;
+                         dbo.collection("haadafottest").find({userid:data.userid}).toArray(function(err,foundDate) {
+                            var askingDate = new Date(data.date).getDate();
+                            console.log("found date" , foundDate);
+                            foundDate.forEach(element => {
+                            var begin = new Date(element.begindate).getDate();
+                            var end = new Date(element.enddate).getDate();
+                            if(askingDate >= begin && askingDate <= end) {
+                                console.log("not good");
+                                goodPlace = false;
+
+                            }
+                        });
+                        console.log("goodPlace" , goodPlace);
+                        if(goodPlace == true) {
+                            dbo.collection("toranutsthismonth").insertOne(data);
+                            console.log(data);
+                            var myPoints = data.points + 1;
+                            //console.log("POINTS",myPoints);
+                            dbo.collection("users").findOneAndUpdate({userid:data.userid}, { $inc: {'points': 1 } }, {new: true },function(err, response) {
+                                if (err) {
+                                console.log("error");
+                               } else {
+                                   console.log("succsed",response);
+                               }
+                            }
+                            );
+                        }          
+
+
+                    });
+                            
                         db.close();
-                        res.status(200).json("success");
+                        console.log("final good place", goodPlace);
+                        res.json(goodPlace);
 
                     }
                 );
