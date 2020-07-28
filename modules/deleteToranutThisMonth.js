@@ -28,7 +28,14 @@ function deleteToranutThisMonth(url, MongoClient, req, res) {
                     },
                     function (err, db) {
                         if (err) throw err;
+
+                        var dataNotifcation = {
+                            date: req.body.date,
+                            userid: req.body.userid,
+                            action: "delete"
+                        }
                         var dbo = db.db("newmaindb");
+                        dbo.collection("notifications").insert(dataNotifcation);
                         dbo.collection("toranutsthismonth").deleteOne({ _id: new mongodb.ObjectId(_id) }, function (err, obj) {
                             if (err) throw err;
                             console.log("1 document deleted");

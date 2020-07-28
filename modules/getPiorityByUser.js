@@ -3,19 +3,15 @@ const jwt = require("jsonwebtoken");
 function getPiorityByUser(url, MongoClient, req, res) {
 
 
-    
-
-
-
-
-    console.log("data",req.body);
-    var userid = req.body.userid.userid;
+    console.log("get piorirty" , req.body);
+   // console.log("data",req.body);
+    var userid = req.body.userid;
     var haadfotPiorty = req.body.piority[0]; 
     var userPiorty = req.body.piority[1];
     var userArray =[];
     const isEquel = (element) => element == userid;
     var index = userPiorty.findIndex(isEquel);
-    console.log("index",index);
+   // console.log("index",index);
  //   var yhas = 100 / 3;
 
     let haadafotUser = [];
@@ -38,9 +34,9 @@ function getPiorityByUser(url, MongoClient, req, res) {
                 haadafotUser.push(i);
             }
             });
-            db.close();
           
         });
+        db.close();
     }
   );
 
@@ -63,7 +59,7 @@ function getPiorityByUser(url, MongoClient, req, res) {
     }
 
 
-    console.log("userArray",userArray);
+    //console.log("userArray",userArray);
     res.send(userArray);
 
 

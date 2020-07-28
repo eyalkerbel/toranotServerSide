@@ -1,6 +1,5 @@
 const express = require("express");
 const cors=require('cors');
-
 const app = express();
 const MongoClient = require("mongodb").MongoClient;
 //const url = "mongodb+srv://nemoserver:DobyRs51kbIdc2YU@cluster0-qds1b.azure.mongodb.net/test?retryWrites=true&w=majority";
@@ -25,6 +24,12 @@ const getHaadafotByUser = require("./modules/getHaadafotByUser");
 const getAllHaadafot = require("./modules/getAllHaadafot");
 const getPiority = require("./modules/getPiority");
 const getPiorityByUser = require("./modules/getPiorityByUser");
+const sendMessage = require("./modules/sendMessage");
+const getMessage = require("./modules/getMessage");
+const getNotifaction = require("./modules/getNotifaction")
+const addTotanotChange = require("./modules/addToranotChange");
+const getExchangesAndTornot =  require("./modules/getExchangesAndTornot");
+const approveExchange = require("./modules/approveExchange");
 //middleware for json
 app.use(express.json());
 //middleware for allowing fetch from different port 
@@ -43,6 +48,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use(cors({origin:true,credentials: true}));
+app.use(express.static(__dirname + '/public'));
 
 //logs in
 
@@ -51,6 +57,8 @@ app.use(cors({origin:true,credentials: true}));
 app.post("/api/checkuser", (req, res) => {
   console.log("hi");
   console.log(req.body);
+  console.log('dsnds');
+
   checkUser(url, MongoClient, req, res);
 });
 app.post("/api/registeruser", (req,res) => {
@@ -125,6 +133,32 @@ app.post("/api/sethaadafot", (req, res) => {
 
 app.post("/api/getusersandtoranuts", (req, res) => {
   getUsersAndToranuts(url, MongoClient, req, res);
+});
+
+app.post("/api/sendmessage", (req,res) => {
+  sendMessage(url,MongoClient,req,res);
+});
+
+app.post("/api/getmessagebyid", (req,res) => {
+  console.log("index get massage");
+  getMessage(url,MongoClient,req,res);
+});
+
+app.post("/api/getnotifaction" , (req,res) => {
+  getNotifaction(url,MongoClient,req,res);
+});
+
+app.post("/api/addtoranotchange", (req,res) => {
+  console.log("addtoranotchange");
+  addTotanotChange(url,MongoClient,req,res);
+});
+app.post("/api/getexchangesandtoranot", (req,res) => {
+  getExchangesAndTornot(url,MongoClient,req,res);
+});
+
+app.post("/api/approveexchange" , (req,res) => {
+  console.log("approveexchangee");
+  approveExchange(url,MongoClient,req,res);
 });
 
 port = process.env.PORT || 5000;

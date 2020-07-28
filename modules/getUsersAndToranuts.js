@@ -14,7 +14,7 @@ function getUsersAndToranuts(url, MongoClient, req, res) {
         var permissionlvl = obi.permissionlvl;
         var data = req.body;
 
-        if (permissionlvl === "admin") {
+        // if (permissionlvl === "admin") {
             MongoClient.connect(
                 url,
                 {
@@ -56,24 +56,15 @@ function getUsersAndToranuts(url, MongoClient, req, res) {
                             } else {
                                 sendable.push(result);
                                 console.log(sendable)
-                            }
-                        });
-                        dbo.collection("toranutsthismonth")
-                        .find({})
-                        .toArray(function (err, result) {
-                            if (result.length === 0) {
-                                console.log("lookup failed");
-                                sendable.push(result);
-                            } else {
-                                sendable.push(result);
+                                res.json(sendable)
                             }
                         });
                     db.close();
                 }
             );
-        } else {
-            res.status(400).json("not an admin");
-        }
+        // } else {
+        //     res.status(400).json("not an admin");
+        // }
     });
 
 }

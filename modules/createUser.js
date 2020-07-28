@@ -11,7 +11,7 @@ function createUser(url, MongoClient, req, res) {
             res.status(400).json("invalid jwt")
             return;
         }
-        console.log(verified);
+        console.log(verified,"kjsaj");
         var obi = verified.payload;
         var permissionlvl = "admin";
         console.log(permissionlvl);

@@ -16,7 +16,6 @@ const jwt = require("jsonwebtoken");
         function (err, db) {
           if (err) throw err;
           var dbo = db.db("newmaindb");
-          
           dbo.collection("toranutsthismonth").find({}).toArray(async function(err,resultToranot){
             console.log("all");
               resultToranot.forEach(el => {
@@ -25,8 +24,6 @@ const jwt = require("jsonwebtoken");
                 occupiedDay.push(day);
               })
           });
-
-
           dbo.collection("haadafottest")
             .find({
             })
@@ -34,8 +31,7 @@ const jwt = require("jsonwebtoken");
                 var sendable = [];
 
               if (result.length === 0) {
-            
-        } else {
+                 } else {
          // console.log("occupiedDay",occupiedDay)
         var newCounter = await getPiorityDays(result,occupiedDay);
         var userPoirity = await getPiorityUsers(result);

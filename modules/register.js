@@ -17,7 +17,7 @@ function register(url, MongoClient, req, res) {
     var BearerHeader = req.headers["authorization"];
     var splitted = BearerHeader.split(" ");
          data.permissionlvl = "user";
-console.log(data); 
+console.log(data);
 //     if (ValidOrNot.error === null) {
     MongoClient.connect(
         url,

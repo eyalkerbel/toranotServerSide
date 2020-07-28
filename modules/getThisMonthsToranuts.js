@@ -13,6 +13,7 @@ function getThisMonthsToranuts(url, MongoClient, req, res) {
 
     var obi = verified.payload;
     var userid = obi.userid;
+    console.log("userid" , userid);
     MongoClient.connect(
       url,
       { useNewUrlParser: true, useUnifiedTopology: true },
@@ -21,7 +22,7 @@ function getThisMonthsToranuts(url, MongoClient, req, res) {
         var dbo = db.db("newmaindb");
         dbo
           .collection("toranutsthismonth")
-          .find({ userid })
+          .find({userid:userid })
           .toArray(function (err, result) {
             if (result.length === 0) {
               console.log("lookup failed");

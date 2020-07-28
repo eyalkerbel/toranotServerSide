@@ -25,8 +25,6 @@ function setToranutThisMonth(url, MongoClient, req, res) {
             })
             const ValidOrNot = Joi.validate(data, schema);
             if (ValidOrNot.error === null) {
-
-
                 MongoClient.connect(
                     url,
                     {
@@ -37,6 +35,12 @@ function setToranutThisMonth(url, MongoClient, req, res) {
                         if (err) throw err;
                         var dbo = db.db("newmaindb");
                         var goodPlace = true;
+                        var dataNotifcation = {
+                            date: req.body.date,
+                            userid: req.body.userid,
+                            action: "place"
+                        } 
+                        dbo.collection("notifications").insertOne(dataNotifcation);
                          dbo.collection("haadafottest").find({userid:data.userid}).toArray(function(err,foundDate) {
                             var askingDate = new Date(data.date).getDate();
                             console.log("found date" , foundDate);
@@ -55,34 +59,29 @@ function setToranutThisMonth(url, MongoClient, req, res) {
                             console.log(data);
                             var myPoints = data.points + 1;
                             //console.log("POINTS",myPoints);
-                            dbo.collection("users").findOneAndUpdate({userid:data.userid}, { $inc: {'points': 1 } }, {new: true },function(err, response) {
-                                if (err) {
-                                console.log("error");
-                               } else {
-                                   console.log("succsed",response);
-                               }
+                            dbo.collection("users").findOneAndUpdate({userid:data.userid}, {$inc: {'points': 1 } }, {new: true },function(err, response) {
+                              
+                                db.close();
+                                console.log("final good place", goodPlace);
+                                res.json(goodPlace);
+                               
                             }
                             );
-                        }          
-
-
+                        }         
                     });
-                            
-                        db.close();
-                        console.log("final good place", goodPlace);
-                        res.json(goodPlace);
-
-                    }
+                }
                 );
                 
                 
 
 
             } else {
+                db.close();
                 res.status(400).json("schema blocked")
                 console.log("schema blocked")
             }
         } else {
+            db.close();
             res.status(400).json("not an admin");
         }
     });
