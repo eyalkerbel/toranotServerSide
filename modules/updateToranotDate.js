@@ -1,5 +1,5 @@
-const getThisMonthsToranuts = require("./getThisMonthsToranuts");
-import {getThisMonthsToranuts} from "./getThisMonthsToranuts";
+// const getThisMonthsToranuts = require("./getThisMonthsToranuts");
+// import {getThisMonthsToranuts} from "./getThisMonthsToranuts";
 
 function updateToranotDate(url,MongoClinet,req,res) {
     var BearerHeader = req.headers["authorization"];
