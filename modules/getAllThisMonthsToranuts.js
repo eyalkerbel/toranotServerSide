@@ -99,7 +99,6 @@ function getAllThisMonthsToranuts(url, MongoClient, req, res) {
                     .toArray(function (err, result) {
                       if (result.length === 0) {
                         console.log("lookup failed walla");
-                        res.status(200).json(sendable);
                       } else {
                         for(var i=0;i<result.length;i++) {
                           var newDate = new Date(result[i].date);
@@ -110,9 +109,8 @@ function getAllThisMonthsToranuts(url, MongoClient, req, res) {
                         console.log("tempMyNextMonth" ,tempMyNextMonth)
                         sendable[1].push(tempMyNextMonth);
                         console.log("sendavle" ,  sendable[0]  , sendable[1]);
-                        res.json(sendable);
-
                       }
+                      res.json(sendable);
                     });
 
                   //  sendable.push(tempNextMonth);
