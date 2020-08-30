@@ -23,6 +23,8 @@ function getExchangesAndTornot(url,MongoClient,req,res) {
                 if (err) throw err;
                 var sendable = [];
                 var dbo = db.db("newmaindb");
+               dbo.collection("toranotexchanges").updateMany({'newDate.userid':userid},{"$set":{"seen": true}},{},function(err, response) {
+               });
                 dbo.collection("toranutsthismonth")
                 .find({userid:userid})
                 .toArray(function (err, result) {
@@ -37,7 +39,8 @@ function getExchangesAndTornot(url,MongoClient,req,res) {
                     sendable.push(result);
                     }
                 });
-                dbo.collection("toranotexchanges").find( {'oldDate.userid':userid}).toArray(function (err, result) {
+                dbo.collection("toranotexchanges").find({'oldDate.userid':userid}).toArray(function (err, result) {
+                    console.log("resultmine" ,  result);
                     //console.log("exchanges id", result);
                     if(result == []) {
                         sendable.push([null]);
@@ -46,17 +49,31 @@ function getExchangesAndTornot(url,MongoClient,req,res) {
                     }
 
                 });
-                dbo.collection("toranotexchanges").find( {'newDate.userid':userid}).toArray(function (err, result) {
+
+               
+
+                dbo.collection("toranotexchanges").find({'newDate.userid':userid}).toArray(function (err, result) {
                   //  console.log("exchanges id", result);
                     if(err) {
                         console.log("error");
-                        sendable.push(result);
-                      res.json(sendable)
+                        sendable.push([null]);
+                        // res.json(sendable)
                     } else {
                         sendable.push(result);
-                        res.json(sendable)
+                        // res.json(sendable)
                     }
                 });
+                dbo.collection("toranotexchanges").find({'newDate.userid':userid, status:{ "$nin": ["asking" , "reject"]}}).toArray(function (err, result) {
+                    //  console.log("exchanges id", result);
+                      if(result == []) {
+                          console.log("error");
+                          sendable.push([]);
+                        res.json(sendable)
+                      } else {
+                          sendable.push(result);
+                          res.json(sendable)
+                      }
+                  });
                 
 
                 db.close();

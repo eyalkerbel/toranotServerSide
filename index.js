@@ -30,6 +30,10 @@ const getNotifaction = require("./modules/getNotifaction")
 const addTotanotChange = require("./modules/addToranotChange");
 const getExchangesAndTornot =  require("./modules/getExchangesAndTornot");
 const approveExchange = require("./modules/approveExchange");
+const getExchangeToApprove = require("./modules/getExchangeToApprove");
+const updateExchangeAnswer = require("./modules/updateExchangeAnswer");
+const SendMessageAgain = require("./modules/SendMessageAgain");
+const sendStatusShmirot = require("./modules/sendStatusShmirot");
 //middleware for json
 app.use(express.json());
 //middleware for allowing fetch from different port 
@@ -159,6 +163,22 @@ app.post("/api/getexchangesandtoranot", (req,res) => {
 app.post("/api/approveexchange" , (req,res) => {
   console.log("approveexchangee");
   approveExchange(url,MongoClient,req,res);
+});
+
+app.post("/api/getexchangeapprove" , (req,res) => {
+  console.log("getexchangeapprove");
+  getExchangeToApprove(url,MongoClient,req,res);
+});
+app.post("/api/updateexchangemanager" , (req,res) => {
+  console.log("updateFromManager");
+  updateExchangeAnswer(url,MongoClient,req,res);
+});
+
+app.post("/api/sendmessageagain" , (req,res) => {
+  SendMessageAgain(url,MongoClient,req,res);
+});
+app.post("/api/sendstatusshmirot" , (req,res) => {
+  sendStatusShmirot(url,MongoClient,req,res);
 });
 
 port = process.env.PORT || 5000;

@@ -9,7 +9,10 @@
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.3.2",
-    "react-redux": "^7.2.0"
+    "react-notification-center": "^1.2.2",
+    "react-notifications-menu": "^1.0.1",
+    "react-redux": "^7.2.0",
+    "shortid": "^2.2.15"
   },
   "devDependencies": {
     "concurrently": "^4.0.1 ",

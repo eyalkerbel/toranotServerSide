@@ -21,6 +21,7 @@ function setToranutNextMonth(url, MongoClient, req, res) {
                 type: Joi.number().required(),
                 userid: Joi.string().required(),
                 toran: Joi.number().required(),
+                points: Joi.number().required(),
             })
             const ValidOrNot = Joi.validate(data, schema);
             if (ValidOrNot.error === null) {

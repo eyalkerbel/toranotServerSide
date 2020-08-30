@@ -33,9 +33,9 @@ function setHaadafot(url, MongoClient, req, res) {
         function (err, db) {
           if (err) throw err;
           var dbo = db.db("newmaindb");
-          dbo.collection("haadafottest").deleteMany({
-            userid
-          });
+          // dbo.collection("haadafottest").deleteMany({
+          //   userid
+          // });
           dbo.collection("haadafottest").insert(arriOfHaadafot);
           db.close();
           res.status(200).json("challenge accepted");

@@ -29,6 +29,7 @@ function getNotifaction(url,MongoClient,req,res) {
                       //  res.json(sendable);
                     }
                 });
+              //  console.log("getNotifaction");
                 dbo.collection("toranotexchanges").find( {'newDate.userid':userids }).toArray(function (err, result) {
                   //  console.log("exchanges id", result);
                     if(err) {
@@ -36,7 +37,9 @@ function getNotifaction(url,MongoClient,req,res) {
                         sendable.push(result);
                       res.json(sendable)
                     } else {
+                //      console.log("result n " , result)
                         sendable.push(result);
+                        
                         res.json(sendable)
                     }
                 });

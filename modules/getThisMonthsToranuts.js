@@ -10,9 +10,12 @@ function getThisMonthsToranuts(url, MongoClient, req, res) {
     }
     console.log(verified);
     console.log(err)
-
+    var currentDate = new Date();
+    var currentMonth = currentDate.getMonth();
+    console.log("current Month" , currentMonth);
     var obi = verified.payload;
     var userid = obi.userid;
+    var temp = [];
     console.log("userid" , userid);
     MongoClient.connect(
       url,
@@ -28,7 +31,13 @@ function getThisMonthsToranuts(url, MongoClient, req, res) {
               console.log("lookup failed");
               res.status(400).json([])
             } else {
-              res.json(result);
+              for(var i=0;i<result.length;i++) {
+                var newDate = new Date(result[i].date);
+               if(currentMonth == newDate.getMonth()) {
+                  temp.push(result[i]);
+               }
+              }
+              res.json(temp);
               db.close();
             }
           });
