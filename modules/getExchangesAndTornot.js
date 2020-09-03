@@ -47,6 +47,10 @@ function getExchangesAndTornot(url,MongoClient,req,res) {
                     } else {
                     sendable.push(result);
                     }
+                    // dbo.collection("toranotexchanges").deleteMany({'oldDate.userid':userid,status:"mainlycancel"} , function(req,res) {
+                        
+                    // });
+                
 
                 });
 
@@ -68,15 +72,18 @@ function getExchangesAndTornot(url,MongoClient,req,res) {
                       if(result == []) {
                           console.log("error");
                           sendable.push([]);
+                          console.log("sendable", sendable);
                         res.json(sendable)
                       } else {
                           sendable.push(result);
+                          console.log("sendable", sendable);
                           res.json(sendable)
                       }
+                      
                   });
-                
+                  db.close();
 
-                db.close();
+
             });
 });
 }
