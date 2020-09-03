@@ -31,7 +31,7 @@
   "author": "benji",
   "license": "ISC",
   "engines": {
-    "node": "12.16.1",
+    "node": "12.18.0",
     "npm": "6.13.7",
     "yarn": " 1.22.4"
   }
