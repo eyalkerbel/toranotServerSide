@@ -22,6 +22,7 @@ function getHaadafotByUser(url, MongoClient, req, res) {
               if (result.length === 0) {
                 console.log("lookup failed");
                 res.status(200).send(result);
+                db.close();
               } else {
                      console.log("good");
                 res.status(200).json(result);

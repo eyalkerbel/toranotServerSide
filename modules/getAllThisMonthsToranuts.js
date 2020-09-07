@@ -1,10 +1,9 @@
 const jwt = require("jsonwebtoken");
 
 function getAllThisMonthsToranuts(url, MongoClient, req, res) {
-    console.log("getAllThisMonthsToranuts server");
-    var BearerHeader = req.headers["authorization"];
-    var splitted = BearerHeader.split(" ");
-    jwt.verify(splitted[1], "iamthesecretkey", (err, verified) => {
+  var BearerHeader = req.headers["authorization"];
+  var splitted = BearerHeader.split(" ");
+  jwt.verify(splitted[1], "iamthesecretkey", (err, verified) => {
         if (err !== null) {
             res.status(400).json("invalid jwt")
             return;
@@ -34,11 +33,11 @@ function getAllThisMonthsToranuts(url, MongoClient, req, res) {
                     .find({})
                     .toArray(function (err, result) {
                         if (result.length === 0) {
-                            console.log("lookup failed");
+                            console.log("lookup failed 0 0");
                         } else {
                             for(var i=0;i<result.length;i++) {
                                 var newDate = new Date(result[i].date);
-                                console.log("vs" , currentMonth , "  ,  " , newDate.getMonth())
+                                // console.log("vs" , currentMonth , "  ,  " , newDate.getMonth())
                                if(currentMonth == newDate.getMonth()) {
                                 tempAllThisMonth.push(result[i]);
                                }
@@ -47,6 +46,8 @@ function getAllThisMonthsToranuts(url, MongoClient, req, res) {
                      //     tempThisMonth.push(tempAllThisMonth);
                         }
                         sendable[0].push(tempAllThisMonth);
+                        console.log("succsedd 0 0 ");
+
 
                     });
                     dbo
@@ -54,8 +55,8 @@ function getAllThisMonthsToranuts(url, MongoClient, req, res) {
                     .find({userid:userid })
                     .toArray(function (err, result) {
                       if (result.length === 0) {
-                        console.log("lookup failed");
-                        res.status(400).json([])
+                        console.log("lookup failed 0 1");
+                       // res.status(400).json([])
                       } else {
                         for(var i=0;i<result.length;i++) {
                           var newDate = new Date(result[i].date);
@@ -66,18 +67,19 @@ function getAllThisMonthsToranuts(url, MongoClient, req, res) {
                        
                       }
                       sendable[0].push(tempMyThisMonth);
-
+                      console.log("succsedd 0 1 ");
                     });
-                    console.log("tempthismonth" , tempThisMonth)
+                    console.log("tempthismonth" , tempThisMonth);
 
-                ;
+                
                 dbo.collection("toranutsnextmonth")
                     .find({})
                     .toArray(function (err, result) {
                     //    console.log("resnex" , result);
                         if (result.length === 0) {
-                            console.log("lookup failed");
-                            res.json(sendable)
+                            console.log("lookup failed 1 0");
+                            //res.json(sendable)
+                            sendable[1].push([]);
                         } else {
                             console.log("res" , result);
                             for(var i=0;i<result.length;i++) {
@@ -88,7 +90,8 @@ function getAllThisMonthsToranuts(url, MongoClient, req, res) {
                                }
                               }
                               sendable[1].push(tempAllNextMonth);
-                               
+                              console.log("succseed 1 0");
+
                             //console.log("sensable" ,sendable)
                           //  res.json(sendable)
                         }
@@ -99,6 +102,7 @@ function getAllThisMonthsToranuts(url, MongoClient, req, res) {
                     .toArray(function (err, result) {
                       if (result.length === 0) {
                         console.log("lookup failed walla");
+                        sendable[1].push([]);
                       } else {
                         for(var i=0;i<result.length;i++) {
                           var newDate = new Date(result[i].date);
@@ -110,14 +114,11 @@ function getAllThisMonthsToranuts(url, MongoClient, req, res) {
                         sendable[1].push(tempMyNextMonth);
                         console.log("sendavle" ,  sendable[0]  , sendable[1]);
                       }
+                      console.log("finsih getall")
                       res.json(sendable);
+                      db.close();
                     });
 
-                  //  sendable.push(tempNextMonth);
-                  //  var myPoints = data.points + 1;
-                    //console.log("POINTS",myPoints);
-                 //   dbo.collection("users").update({userid:data.userid},{'$set': {'points': myPoints}} , function(err){});
-                db.close();
 
             }
         );

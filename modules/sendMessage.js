@@ -60,6 +60,7 @@ async function sendMessage(url,MongoClient,req,res) {
                 }
               }
               dbo.collection("messages").insert(data);
+              db.close();
           }
           });
 });

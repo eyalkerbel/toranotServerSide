@@ -36,7 +36,6 @@ function getPiorityByUser(url, MongoClient, req, res) {
             });
           
         });
-        db.close();
     }
   );
 
@@ -61,6 +60,7 @@ function getPiorityByUser(url, MongoClient, req, res) {
 
     //console.log("userArray",userArray);
     res.send(userArray);
+    db.close();
 
 
 

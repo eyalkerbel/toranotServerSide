@@ -41,10 +41,13 @@ function setToranutNextMonth(url, MongoClient, req, res) {
                 );
             } else {
                 res.status(400).json("schema blocked")
-                console.log("schema blocked")
+                console.log("schema blocked");
+                db.close();
+
             }
         } else {
             res.status(400).json("not an admin");
+            db.close();
         }
     });
 

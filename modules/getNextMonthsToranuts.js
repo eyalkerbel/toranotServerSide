@@ -26,6 +26,7 @@ function getNextMonthsToranuts(url, MongoClient, req, res) {
             if (result.length === 0) {
               console.log("lookup failed");
               res.status(400).json([]);
+              db.close();
             } else {
               res.json(result);
               db.close();

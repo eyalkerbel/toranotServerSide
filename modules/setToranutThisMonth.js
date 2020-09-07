@@ -61,10 +61,10 @@ function setToranutThisMonth(url, MongoClient, req, res) {
                             //console.log("POINTS",myPoints);
                             dbo.collection("users").findOneAndUpdate({userid:data.userid}, {$inc: {'points': 1 } }, {new: true },function(err, response) {
                               
-                                db.close();
                                 console.log("final good place", goodPlace);
                                 res.json(goodPlace);
-                               
+                                db.close();
+
                             }
                             );
                         }         
@@ -76,13 +76,13 @@ function setToranutThisMonth(url, MongoClient, req, res) {
 
 
             } else {
-                db.close();
                 res.status(400).json("schema blocked")
+                db.close();
                 console.log("schema blocked")
             }
         } else {
-            db.close();
             res.status(400).json("not an admin");
+            db.close();
         }
     });
 

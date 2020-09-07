@@ -37,7 +37,9 @@ function addTotanotChange(url,MongoClient,req,res) {
           if (err) throw err;
           var dbo = db.db("newmaindb");
           console.log("req body" , req.body);
-          dbo.collection("toranotexchanges").insert(data);        
+          dbo.collection("toranotexchanges").insert(data);     
+          db.close();
+   
 });
 });
 }

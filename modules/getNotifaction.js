@@ -19,7 +19,6 @@ function getNotifaction(url,MongoClient,req,res) {
                 if (err) throw err;
                 var dbo = db.db("newmaindb");
                 dbo.collection("notifications").find({userid:userids}).toArray(function (err, result) {
-                 //   console.log("notfiactiot id", result);
                     if(err) {
                         console.log("error");
                         sendable.push(result);
@@ -35,16 +34,18 @@ function getNotifaction(url,MongoClient,req,res) {
                     if(err) {
                         console.log("error");
                         sendable.push(result);
-                      res.json(sendable)
+                      res.json(sendable);
+                      db.close();
                     } else {
                 //      console.log("result n " , result)
                         sendable.push(result);
                         
-                        res.json(sendable)
+                        res.json(sendable);
+                        db.close();
+
                     }
                 });
 
-                db.close();
             }
                 );
     });

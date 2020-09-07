@@ -73,15 +73,16 @@ function getExchangesAndTornot(url,MongoClient,req,res) {
                           console.log("error");
                           sendable.push([]);
                           console.log("sendable", sendable);
-                        res.json(sendable)
+                        res.json(sendable);
+                        db.close();
                       } else {
                           sendable.push(result);
                           console.log("sendable", sendable);
-                          res.json(sendable)
+                          res.json(sendable);
+                          db.close();
                       }
                       
                   });
-                  db.close();
 
 
             });

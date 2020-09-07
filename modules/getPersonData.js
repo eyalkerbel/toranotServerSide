@@ -32,6 +32,8 @@ function getPersonData(url, MongoClient, req, res) {
               console.log("lookup failed");
               console.log(result,obi);
               res.status(200).send(obi);
+              db.close();
+
             } else {
                   res.status(200).json(obi);
               db.close();

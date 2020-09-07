@@ -27,9 +27,7 @@ function checkUser(url, MongoClient, req, res) {
         if (err) throw err;
         console.log("dbo")
         var dbo = db.db("newmaindb");
-        console.log(username);
         dbo.collection("users").find({$or:[ {'userid':username}, {'sn':username}]}).toArray(function (err, result) {
-            console.log("result",result);
             if (result.length === 0) {
               console.log("login failed");
               res.status(400).send("None shall pass");

@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
+const { ObjectId } = require('mongodb');
 
 function getUsersAndToranuts(url, MongoClient, req, res) {
     var BearerHeader = req.headers["authorization"];
@@ -21,13 +22,13 @@ function getUsersAndToranuts(url, MongoClient, req, res) {
                     useNewUrlParser: true,
                     useUnifiedTopology: true
                 },
-                function (err, db, ) {
+                function (err, db) {
                     if (err) throw err;
                     var dbo = db.db("newmaindb");
                     var sendable = [];
-
-                    dbo.collection("users").find({})
-                        .toArray(function (err, result) {
+                    console.log("dbo", dbo.collection("userss"));
+                    dbo.collection("users").find({}).toArray(function (err, result) {
+                        console.log("err" , err);
                             if (result.length === 0) {
                                 console.log("lookup failed");
                                 sendable.push(result)
@@ -52,14 +53,17 @@ function getUsersAndToranuts(url, MongoClient, req, res) {
                             if (result.length === 0) {
                                 sendable.push(result);
                                 console.log("lookup failed");
-                                res.json(sendable)
+                                res.json(sendable);
+                                db.close();
                             } else {
                                 sendable.push(result);
-                                console.log(sendable)
-                                res.json(sendable)
+                                console.log(sendable);
+                                res.json(sendable);
+                                cosnoel.log("not good");
+                                db.close();
+
                             }
                         });
-                    db.close();
                 }
             );
         // } else {

@@ -42,6 +42,7 @@ function getMessage(url,MongoClient,req,res) {
                 console.log("lookup failed");
                 db.close();
               res.status(200).send(result);
+              db.close();
               } else {
                // sendable.push(result);
                 console.log("data",result);
