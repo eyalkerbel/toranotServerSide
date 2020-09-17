@@ -35,7 +35,7 @@ function deleteToranutNextMonth(url, MongoClient, req, res) {
                             db.close();
                             }
                        
-                        console.log("im here")
+                        console.log("im here MongoOptimze");
                         res.status(200).json("success");
                         db.close();
                     });
