@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { ObjectId } = require('mongodb');
 
 function getHaadafot(url, MongoClient, req, res) {
   var BearerHeader = req.headers["authorization"];
@@ -10,8 +11,8 @@ function getHaadafot(url, MongoClient, req, res) {
     }
     console.log(verified);
     var obi = verified.payload;
-    var userid = obi.userid;
-    console.log("userid hadd",userid);
+    var _id = obi._id;
+    console.log("userid hadd",_id);
     MongoClient.connect(
       url,
       {
@@ -24,7 +25,7 @@ function getHaadafot(url, MongoClient, req, res) {
         dbo
           .collection("haadafottest")
           .find({
-            userid:userid
+            idUser:ObjectId(_id)
           })
           .toArray(function (err, result) {
             if (result.length === 0) {

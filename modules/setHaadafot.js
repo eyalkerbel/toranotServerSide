@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const Joi = require('joi');
+const { ObjectId } = require('mongodb');
 
 function setHaadafot(url, MongoClient, req, res) {
   var BearerHeader = req.headers["authorization"];
@@ -21,9 +22,12 @@ function setHaadafot(url, MongoClient, req, res) {
     if (ValidOrNot.error === null) {
       console.log("hadafot",arriOfHaadafot);
       arriOfHaadafot.forEach(element => {
-        element.userid = userid;
+        // element.userid = userid;
+        element.idUser = ObjectId(obi._id);
       });
-     // console.log(arriOfHaadafot);
+     console.log(arriOfHaadafot);
+      
+
       MongoClient.connect(
         url,
         {
@@ -36,11 +40,18 @@ function setHaadafot(url, MongoClient, req, res) {
           // dbo.collection("haadafottest").deleteMany({
           //   userid
           // });
-          dbo.collection("haadafottest").insert(arriOfHaadafot);
-          db.close();
-          res.status(200).json("challenge accepted");
-        }
-      );
+          console.log("arriofHaadafot" , arriOfHaadafot);
+
+          dbo.collection("haadafottest").insert(arriOfHaadafot).then(items => {
+              res.status(200).json("challenge accepted");
+              db.close();
+            });
+          
+            
+          // });
+         
+
+        });
     }
   });
 }
