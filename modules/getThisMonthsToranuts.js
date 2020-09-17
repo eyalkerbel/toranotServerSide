@@ -12,11 +12,11 @@ function getThisMonthsToranuts(url, MongoClient, req, res) {
     console.log(err)
     var currentDate = new Date();
     var currentMonth = currentDate.getMonth();
-    console.log("current Month" , currentMonth);
+   // console.log("current Month" , currentMonth);
     var obi = verified.payload;
     var userid = obi.userid;
     var temp = [];
-    console.log("userid" , userid);
+   // console.log("userid" , userid);
     MongoClient.connect(
       url,
       { useNewUrlParser: true, useUnifiedTopology: true },
@@ -28,7 +28,7 @@ function getThisMonthsToranuts(url, MongoClient, req, res) {
           .find({userid:userid })
           .toArray(function (err, result) {
             if (result.length === 0) {
-              console.log("lookup failed");
+              // console.log("lookup failed");
               res.status(400).json([])
             } else {
               for(var i=0;i<result.length;i++) {
@@ -37,6 +37,7 @@ function getThisMonthsToranuts(url, MongoClient, req, res) {
                   temp.push(result[i]);
                }
               }
+              console.log("next month toranut" , temp);
               res.json(temp);
               db.close();
             }

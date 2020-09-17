@@ -17,7 +17,7 @@ const jwt = require("jsonwebtoken");
           if (err) throw err;
           var dbo = db.db("newmaindb");
           dbo.collection("toranutsthismonth").find({}).toArray(async function(err,resultToranot){
-            console.log("all");
+            // console.log("all");
               resultToranot.forEach(el => {
                 var date = new Date(el.date)
                 var day = date.getDate();
@@ -144,7 +144,7 @@ async function getPiorityDays(haadafot,occupiedDay) {
     var index = newCounter.indexOf(valueToDelete);
     if (index !== -1) newCounter.splice(index, 1);
   }
-  console.log("newcounter",newCounter);
+ // console.log("newcounter",newCounter);
     return newCounter;
 
 }

@@ -34,6 +34,8 @@ const getExchangeToApprove = require("./modules/getExchangeToApprove");
 const updateExchangeAnswer = require("./modules/updateExchangeAnswer");
 const SendMessageAgain = require("./modules/SendMessageAgain");
 const sendStatusShmirot = require("./modules/sendStatusShmirot");
+const getAllUsers = require("./modules/getAllUsers");
+const sendcurrenttoranim = require("./modules/setCurrentToranim");
 //middleware for json
 app.use(express.json());
 //middleware for allowing fetch from different port 
@@ -80,7 +82,7 @@ app.post("/api/getthismonthstoranuts", (req, res) => {
   getThisMonthsToranuts(url, MongoClient, req, res);
 });
 app.post("/api/getpioritybyuser", (req, res) => {
-  console.log("getpioritybyuserindex");
+  // console.log("getpioritybyuserindex");
   getPiorityByUser(url, MongoClient, req, res);
 });
 
@@ -179,6 +181,14 @@ app.post("/api/sendmessageagain" , (req,res) => {
 });
 app.post("/api/sendstatusshmirot" , (req,res) => {
   sendStatusShmirot(url,MongoClient,req,res);
+});
+
+app.post("/api/getallusers" , (req,res) => {
+  getAllUsers(url,MongoClient,req,res);
+});
+
+app.post("/api/sendcurrenttoranim" , (req,res) => {
+  sendcurrenttoranim(url,MongoClient,req,res);
 });
 
 port = process.env.PORT || 5000;

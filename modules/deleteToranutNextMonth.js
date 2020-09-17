@@ -30,13 +30,15 @@ function deleteToranutNextMonth(url, MongoClient, req, res) {
                         if (err) throw err;
                         var dbo = db.db("newmaindb");
                         dbo.collection("toranutsnextmonth").deleteOne({ _id: new mongodb.ObjectId(_id) }, function (err, obj) {
-                            if (err) throw err;
-                            console.log("1 document deleted");
+                            if (err) {
+                                res.status(200).json("faluire");
                             db.close();
-                        });
+                            }
+                       
                         console.log("im here")
-                        db.close();
                         res.status(200).json("success");
+                        db.close();
+                    });
                     }
                 );
             } else {

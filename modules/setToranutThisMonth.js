@@ -60,7 +60,6 @@ function setToranutThisMonth(url, MongoClient, req, res) {
                             var myPoints = data.points + 1;
                             //console.log("POINTS",myPoints);
                             dbo.collection("users").findOneAndUpdate({userid:data.userid}, {$inc: {'points': 1 } }, {new: true },function(err, response) {
-                              
                                 console.log("final good place", goodPlace);
                                 res.json(goodPlace);
                                 db.close();

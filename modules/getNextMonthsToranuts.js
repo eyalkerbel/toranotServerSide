@@ -8,8 +8,8 @@ function getNextMonthsToranuts(url, MongoClient, req, res) {
       res.status(400).json("invalid jwt");
       return;
     }
-    console.log(verified);
-    console.log(err);
+    // console.log(verified);
+    // console.log(err);
 
     var obi = verified.payload;
     var userid = obi.userid;

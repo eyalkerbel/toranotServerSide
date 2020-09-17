@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const { ObjectId } = require('mongodb');
+const { Console } = require('console');
 
 function getUsersAndToranuts(url, MongoClient, req, res) {
     var BearerHeader = req.headers["authorization"];
@@ -10,7 +11,6 @@ function getUsersAndToranuts(url, MongoClient, req, res) {
             res.status(400).json("invalid jwt")
             return;
         }
-        console.log(verified);
         var obi = verified.payload;
         var permissionlvl = obi.permissionlvl;
         var data = req.body;
@@ -26,9 +26,7 @@ function getUsersAndToranuts(url, MongoClient, req, res) {
                     if (err) throw err;
                     var dbo = db.db("newmaindb");
                     var sendable = [];
-                    console.log("dbo", dbo.collection("userss"));
-                    dbo.collection("users").find({}).toArray(function (err, result) {
-                        console.log("err" , err);
+                    dbo.collection("toranimThisMonth").find({}).toArray(function (err, result) {
                             if (result.length === 0) {
                                 console.log("lookup failed");
                                 sendable.push(result)
@@ -36,6 +34,14 @@ function getUsersAndToranuts(url, MongoClient, req, res) {
                                 sendable.push(result)
                             }
                         });
+                        dbo.collection("toranimNextMonth").find({}).toArray(function (err, result) {
+                                if (result.length === 0) {
+                                    console.log("lookup failed");
+                                    sendable.push(result)
+                                } else {
+                                    sendable.push(result)
+                                }
+                            });
                     dbo.collection("toranutsthismonth")
                         .find({})
                         .toArray(function (err, result) {
@@ -54,12 +60,12 @@ function getUsersAndToranuts(url, MongoClient, req, res) {
                                 sendable.push(result);
                                 console.log("lookup failed");
                                 res.json(sendable);
+                                console.log("sendablefinal" , sendable);
                                 db.close();
                             } else {
                                 sendable.push(result);
-                                console.log(sendable);
+                                console.log("sendablefinal" , sendable);
                                 res.json(sendable);
-                                cosnoel.log("not good");
                                 db.close();
 
                             }

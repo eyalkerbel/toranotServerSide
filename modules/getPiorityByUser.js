@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 function getPiorityByUser(url, MongoClient, req, res) {
 
 
-    console.log("get piorirty" , req.body);
+   // console.log("get piorirty" , req.body);
    // console.log("data",req.body);
     var userid = req.body.userid;
     var haadfotPiorty = req.body.piority[0]; 
@@ -32,6 +32,9 @@ function getPiorityByUser(url, MongoClient, req, res) {
             var endDay = date2.getDate();
             for(var i=startDay;i<=endDay-1;i++) {
                 haadafotUser.push(i);
+                if( i == endDay-1) {
+                    db.close();
+                }
             }
             });
           
@@ -60,7 +63,6 @@ function getPiorityByUser(url, MongoClient, req, res) {
 
     //console.log("userArray",userArray);
     res.send(userArray);
-    db.close();
 
 
 

@@ -42,8 +42,6 @@ function getAllThisMonthsToranuts(url, MongoClient, req, res) {
                                 tempAllThisMonth.push(result[i]);
                                }
                               }
-                          //  console.log("good get all toranot");
-                     //     tempThisMonth.push(tempAllThisMonth);
                         }
                         sendable[0].push(tempAllThisMonth);
                         console.log("succsedd 0 0 ");
