@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-
+const {ObjectId} = require("mongodb");
 function getThisMonthsToranuts(url, MongoClient, req, res) {
   var BearerHeader = req.headers["authorization"];
   var splitted = BearerHeader.split(" ");
@@ -23,8 +23,9 @@ function getThisMonthsToranuts(url, MongoClient, req, res) {
       function (err, db) {
         if (err) throw err;
         var dbo = db.db("newmaindb");
-        dbo
-          .collection("toranutsthismonth")
+      
+
+        dbo.collection("toranutsthismonth")
           .find({userid:userid })
           .toArray(function (err, result) {
             if (result.length === 0) {

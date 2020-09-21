@@ -1,5 +1,6 @@
 const { ObjectId } = require("mongodb");
 const jwt = require("jsonwebtoken");
+const { promises } = require("fs");
 
 
 function sendStatusShmirot(url,MongoClient,req,res) {
@@ -22,26 +23,40 @@ function sendStatusShmirot(url,MongoClient,req,res) {
           useNewUrlParser: true,
           useUnifiedTopology: true
         },
-        function (err, db) {
+         function (err, db) {
           if (err) throw err;
           var dbo = db.db("newmaindb");
           console.log("temp" , temp , " month " , month , req.body);
-          
-          for(var i=0;i<temp.length;i++) {
+      
+      const promises = temp.map(async tempi => { 
             if(month == 0) {
-              dbo.collection("toranutsthismonth").updateOne({"_id" : ObjectId(temp[i].id)}, {"$set":{"userStatus": temp[i].status}},{upsert: true},function(err,response){
-                  console.log(response)
-              });
+           //   console.log("_id" , temp[i].id)
+              return updateUserStatus(dbo,tempi,"toranutsthismonth");
             }
               else {
-                dbo.collection("toranutsthismonth").updateOne({"_id" : ObjectId(temp[i].id)}, {"$set":{"userStatus": temp.status}},{upsert: true},function(err,response){
-                });
+               return updateUserStatus(dbo,tempi,"toranutsnextmonth");
               }
-            }
-          
+            })
+          Promise.all(promises).then(() => {
+            console.log("finsh");
           db.close();
+          }
+        );
+          
         });
     });
 }
+
+function updateUserStatus(dbo,temp,collectionName) {
+  return new Promise(resolve => dbo.collection(collectionName).updateOne({"_id" : ObjectId(temp.id)}, {"$set":{"userStatus": temp.status}},{upsert: true},function(err,response){
+    resolve(response);
+}));
+}
+
+function updateNextMonth(dbo,temp) {
+
+}
+
+
 
 module.exports = sendStatusShmirot;

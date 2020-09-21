@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
+const { resolve } = require('path');
 
 function setToranutThisMonth(url, MongoClient, req, res) {
     var BearerHeader = req.headers["authorization"];
@@ -31,7 +32,7 @@ function setToranutThisMonth(url, MongoClient, req, res) {
                         useNewUrlParser: true,
                         useUnifiedTopology: true
                     },
-                     function (err, db) {
+                      function (err, db) {
                         if (err) throw err;
                         var dbo = db.db("newmaindb");
                         var goodPlace = true;
@@ -41,7 +42,7 @@ function setToranutThisMonth(url, MongoClient, req, res) {
                             action: "place"
                         } 
                         dbo.collection("notifications").insertOne(dataNotifcation);
-                         dbo.collection("haadafottest").find({userid:data.userid}).toArray(function(err,foundDate) {
+                         dbo.collection("haadafottest").find({userid:data.userid}).toArray(async function(err,foundDate) {
                             var askingDate = new Date(data.date).getDate();
                             console.log("found date" , foundDate);
                             foundDate.forEach(element => {
@@ -53,9 +54,19 @@ function setToranutThisMonth(url, MongoClient, req, res) {
 
                             }
                         });
+                      //  console.log("dssdsddssd" , data.userid);
+                        
+                        var userDetails = await Get_IDByUserID(dbo,data.userid);
+                   //     console.log("_id" , _id);
+                        var newData = {
+                            date: data.date,
+                           userDetails: userDetails,
+                            toran: req.body.toran,
+                            userStatus: "unknown"
+                        };
                         console.log("goodPlace" , goodPlace);
                         if(goodPlace == true) {
-                            dbo.collection("toranutsthismonth").insertOne(data);
+                            dbo.collection("toranutsthismonth").insertOne(newData);
                             console.log(data);
                             var myPoints = data.points + 1;
                             //console.log("POINTS",myPoints);
@@ -87,4 +98,15 @@ function setToranutThisMonth(url, MongoClient, req, res) {
 
 }
 
+ function Get_IDByUserID(dbo,userid) {
+    // dbo.collection("users").findOne({"userid": userid},function(err,response) {
+    //     console.log("response" , response);
+    // });
+return new Promise(resolve => dbo.collection("users").findOne({"userid": userid},function(err,response) {
+    console.log("response" , response);
+     resolve(response);
+}));
+}
+
 module.exports = setToranutThisMonth;
+// module.exports = Get_IDByUserID;

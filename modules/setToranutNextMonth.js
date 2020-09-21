@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
-
+const Get_IDByUserID = require("./setToranutThisMonth");
 function setToranutNextMonth(url, MongoClient, req, res) {
     var BearerHeader = req.headers["authorization"];
     var splitted = BearerHeader.split(" ");
@@ -41,7 +41,7 @@ function setToranutNextMonth(url, MongoClient, req, res) {
                             action: "place"
                         } 
                         dbo.collection("notifications").insertOne(dataNotifcation);
-                         dbo.collection("haadafottest").find({userid:data.userid}).toArray(function(err,foundDate) {
+                         dbo.collection("haadafottest").find({userid:data.userid}).toArray(async function(err,foundDate) {
                             var askingDate = new Date(data.date).getDate();
                             console.log("found date" , foundDate);
                             foundDate.forEach(element => {
@@ -53,9 +53,18 @@ function setToranutNextMonth(url, MongoClient, req, res) {
 
                             }
                         });
+
+                     //   var userDetails = await Get_IDByUserID(dbo,data.userid);
+
+                        var newData = {
+                            date: data.date,
+                            userDetails: userDetails,
+                            toran: req.body.toran
+                        };
+
                         console.log("goodPlace" , goodPlace);
                         if(goodPlace == true) {
-                            dbo.collection("toranutsnextmonth").insertOne(data);
+                            dbo.collection("toranutsnextmonth").insertOne(newData);
                             console.log(data);
                             var myPoints = data.points + 1;
                             //console.log("POINTS",myPoints);

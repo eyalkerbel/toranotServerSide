@@ -26,7 +26,7 @@ function getExchangesAndTornot(url,MongoClient,req,res) {
                dbo.collection("toranotexchanges").updateMany({'newDate.userid':userid},{"$set":{"seen": true}},{},function(err, response) {
                });
                 dbo.collection("toranutsthismonth")
-                .find({userid:userid})
+                .find({"userDetails.userid":userid})
                 .toArray(function (err, result) {
                     sendable.push(result);
                 });
@@ -88,4 +88,6 @@ function getExchangesAndTornot(url,MongoClient,req,res) {
             });
 });
 }
+
+
 module.exports = getExchangesAndTornot;

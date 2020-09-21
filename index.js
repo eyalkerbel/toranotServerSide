@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 const checkUser = require("./modules/checkUser.js");
 const getThisMonthsToranuts = require("./modules/getThisMonthsToranuts.js");
 const getNextMonthsToranuts = require("./modules/getNextMonthsToranuts.js");
-const getAllThisMonthsToranuts = require("./modules/getAllThisMonthsToranuts");
+const getAllToranuts = require("./modules/getAllToranuts");
 const createUser = require("./modules/createUser.js");
 const getHaadafot = require("./modules/getHaadafot.js");
 const setHaadafot = require("./modules/setHaadafot.js");
@@ -121,8 +121,8 @@ app.post("/api/gethaadafotbyuser", (req,res) => {
   getHaadafotByUser(url,MongoClient,req,res);
 });
 
-app.post("/api/getallthismonthstoranuts", (req, res) => {
-  getAllThisMonthsToranuts(url, MongoClient, req, res);
+app.post("/api/getalltoranuts", (req, res) => {
+  getAllToranuts(url, MongoClient, req, res);
 });
 
 app.post("/api/getnextmonthstoranuts", (req, res) => {
