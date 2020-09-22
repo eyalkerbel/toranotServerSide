@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { ObjectId } = require('mongodb');
-
+//const getToranotItemForFronted = require("./MongoEzer/getToranotItemForFronted");
+const getToranotItemForFronted = require("./MongoEzer/getToranotItemForFronted");
 function getAllToranuts(url, MongoClient, req, res) {
   var BearerHeader = req.headers["authorization"];
   var splitted = BearerHeader.split(" ");
@@ -40,7 +41,7 @@ function getAllToranuts(url, MongoClient, req, res) {
                 const nextMonthAllPromise = GetDBCollectionAllUsers(dbo,"toranutsnextmonth",nextMonth,[]);
                 const nextMonthMyPromise = GetDBCollectionMine(dbo,"toranutsnextmonth",nextMonth,idUser);
                 Promise.all([thisMonthAllPromise,thisMonthMyPromise,nextMonthAllPromise,nextMonthMyPromise]).then(value => {
-                 console.log("values" , value);
+                //  console.log("values" , value);
                   sendable[0].push(value[0]);
                   sendable[0].push(value[1]);
                   sendable[1].push(value[2]);
@@ -145,16 +146,38 @@ function getAllToranuts(url, MongoClient, req, res) {
 
 function GetDBCollectionAllUsers(dbo,collectionName,Month,tempAllThisMonth) {
  
-return new Promise(resolve => dbo.collection(collectionName).find({}).toArray(function(err,result) {
-   console.log("result" , result);
-  for(var i=0;i<result.length;i++) {
-    var newDate = new Date(result[i].date);
-    // console.log("vs" , currentMonth , "  ,  " , newDate.getMonth())
-   if(Month == newDate.getMonth()) {
-    tempAllThisMonth.push(result[i]);
-   }
-  }
-  resolve(tempAllThisMonth);
+return new Promise(resolve => dbo.collection(collectionName).find({}).toArray(async function(err,result) {
+ 
+    // var _id = re.idUser;
+    // var newDate = new Date(re.date);
+    // if(Month == newDate.getMonth()) {
+    //   const userDetails = await getDetails(dbo,_id);
+    //   if(userDetails != null) {
+    //     var tempi = {
+    //      _id: re._id,
+    //      date: re.date,
+    //      toran : re.toran,
+    //      userDetails : userDetails
+    //     }
+    //  }
+    // tempAllThisMonth.push(tempi);
+    //   }
+    tempAllThisMonth = await getToranotItemForFronted(dbo,result);
+
+
+// console.log("tempAll" , tempAllThisMonth);
+resolve(tempAllThisMonth);
+
+
+  //  console.log("result" , result);
+  // for(var i=0;i<result.length;i++) {
+  //   var newDate = new Date(result[i].date);
+  //   // console.log("vs" , currentMonth , "  ,  " , newDate.getMonth())
+  //  if(Month == newDate.getMonth()) {
+  //   tempAllThisMonth.push(result[i]);
+  //  }
+  // }
+  // resolve(tempAllThisMonth);
 
 }));
 }
@@ -162,16 +185,18 @@ return new Promise(resolve => dbo.collection(collectionName).find({}).toArray(fu
 
 function GetDBCollectionMine(dbo,collectionName,Month,idUser) {
    tempMyThisMonth = [];
+   console.log("mineeesss",idUser);
   // console.log("id is" , idUser);
-return new Promise(resolve => dbo.collection(collectionName).find({"userDetails._id": new ObjectId(idUser)}).toArray(function(err,result) {
-  console.log("result mine", result);
-  for(var i=0;i<result.length;i++) {
-    var newDate = new Date(result[i].date);
-    // console.log("vs" , currentMonth , "  ,  " , newDate.getMonth())
-   if(Month == newDate.getMonth()) {
-    tempMyThisMonth.push(result[i]);
-   }
-  }
+return new Promise(resolve => dbo.collection(collectionName).find({"idUser": new ObjectId(idUser)}).toArray(async function(err,result) {
+  // console.log("result mine", result);
+  // for(var i=0;i<result.length;i++) {
+  //   var newDate = new Date(result[i].date);
+  //   // console.log("vs" , currentMonth , "  ,  " , newDate.getMonth())
+  //  if(Month == newDate.getMonth()) {
+  //   tempMyThisMonth.push(result[i]);
+  //  }
+  // }
+  tempMyThisMonth = await getToranotItemForFronted(dbo,result);
   resolve(tempMyThisMonth);
 
 }));

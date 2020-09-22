@@ -33,7 +33,7 @@ function updateExchangeAnswer(url,MongoClient,req,res) {
                         dbo.collection("toranutsthismonth").updateOne({ "_id":ObjectId(oldDate.id)},{"$set":{"name": newDate.name,"userid": newDate.userid , "points": -1 }},{upsert: true},function(err, response) {  
                             console.log("result" , response);  
                 });
-                console
+                
 
 
                 dbo.collection("toranutsthismonth").updateOne({"_id":ObjectId(newDate.id)},{"$set":{"name": oldDate.name,"userid": oldDate.userid , "points": -1 }},{},function(err, response) {    

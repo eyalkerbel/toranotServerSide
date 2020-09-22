@@ -17,10 +17,9 @@ function deleteToranutThisMonth(url, MongoClient, req, res) {
         var _id = req.body.id;
         
         if (permissionlvl === "admin") {
-            const schema = Joi.string().required()
             console.log(_id)
-            const ValidOrNot = Joi.validate(_id, schema);
-            if (ValidOrNot.error === null) {
+          //  const ValidOrNot = Joi.validate(_id, schema);
+           // if (ValidOrNot.error === null) {
                 MongoClient.connect(
                     url,
                     {
@@ -29,45 +28,34 @@ function deleteToranutThisMonth(url, MongoClient, req, res) {
                     },
                     function (err, db) {
                         if (err) throw err;
-
+                        var dbo = db.db("newmaindb");
                         var dataNotifcation = {
                             date: req.body.date,
                             userid: req.body.userid,
                             action: "delete"
                         }
-                        var dbo = db.db("newmaindb");
-                        dbo.collection("notifications").insert(dataNotifcation);
-                        dbo.collection("toranutsthismonth").deleteOne({ _id: new ObjectId(_id) }, function (err, obj) {
-                            if (err) {
-                            console.log("err" , err);
+                        var userid = req.body.userid;
+                        console.log("userid",userid);
+                        const promise1 =  dbo.collection("notifications").insert(dataNotifcation);
+                        const promise2 = new Promise(resolve =>  dbo.collection("toranutsthismonth").deleteOne({ _id: new ObjectId(_id) }).then(() => resolve(true)));
+                        const promise3 = new Promise(resolve =>  dbo.collection("users").findOneAndUpdate({userid:userid}, { $inc: {'points': -1 } }, {new: true }).then(() => resolve(true)));
+                        Promise.all([promise1,promise2,promise3]).then(values => {
+                            res.status(200).json("success");
                             db.close();
-                            }
-                            var userid = req.body.userid;
-                            console.log("userid",userid);
-                            var points;
-                            // dbo.collection("users").find({userid:userid}).toArray(function (err, result) {
-                            //       console.log("result",result);
-                            //       points = result.points;
-                            // });
-                              //  dbo.collection("users").update({userid:userid},{'$set': {'points': points - 1}} , function(err){});
-                              dbo.collection("users").findOneAndUpdate({userid:userid}, { $inc: {'points': -1 } }, {new: true },function(err, response) {
-                                res.status(200).json("success");
-                                db.close();
-
-                              });
+                        });
 
                                 
                        
                         // console.log("im here")
                         // db.close();
                         // 
-                    });
+                   
                 });
                 
-            } else {
-                res.status(400).json("schema blocked")
-                console.log("schema blocked")
-            }
+            // } else {
+            //     res.status(400).json("schema blocked")
+            //     console.log("schema blocked")
+            // }
         } else {
             res.status(400).json("not an admin");
         }
