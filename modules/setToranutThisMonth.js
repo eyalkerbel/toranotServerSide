@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const { resolve } = require('path');
 const { runInNewContext } = require('vm');
-
+const { ObjectId } = require('mongodb');
+const addNewNotification = require("./Notifications/addNewNotification");
 function setToranutThisMonth(url, MongoClient, req, res) {
     var BearerHeader = req.headers["authorization"];
     var splitted = BearerHeader.split(" ");
@@ -37,23 +38,31 @@ function setToranutThisMonth(url, MongoClient, req, res) {
                         if (err) throw err;
                         var dbo = db.db("newmaindb");
                     //    var goodPlace = true;
-                        var dataNotifcation = {
-                            date: req.body.date,
-                            userid: req.body.userid,
-                            action: "place"
-                        } 
+
+                    // var noti = {
+                    //     myId: ObjectId(req.body.toranotIdNew),
+                    //     FriendId: await GetIdPersonByToranotId(req.body.toranotIdOld),
+                    //     seen: false,
+                    //     action: "wantExchange"
+                    //   };
+                        // var dataNotifcation = {
+                        //     myId: Get_IDByUserID(dbo,userid),
+                        //     FriendId: obi._id,
+                        //     seen: false,
+                        //     action: 'addToranot'
+                        // } 
                         // dbo.collection("notifications").insertOne(dataNotifcation);
                          await NotInHaadfot(dbo,data).then(goodPlace => {
                              console.log("resolve", goodPlace);
                              if(goodPlace == false) {
                                 db.close();
                              } else {
-                                const promise1 = dbo.collection("notifications").insertOne(dataNotifcation).then(() => console.log("finish promise 1"));
+                        //        const promise1 = dbo.collection("notifications").insertOne(dataNotifcation).then(() => console.log("finish promise 1"));
                                 const proimse2 =  new Promise(resolve => dbo.collection("users").findOneAndUpdate({userid:data.userid}, {$inc: {'points': 1 } }, {new: true }).then(() => {
                                  //   console.log("finish promise 2");
                                      resolve(true)
                                 }));
-                                const proimse3 = AddToranotThisMonth(dbo,data);
+                                const proimse3 = AddToranotThisMonth(dbo,data).then(_id => addNewNotification(dbo,_id,ObjectId(obi._id),"addToranot"));
                             //    AddToranotThisMonth(dbo,data).then((item) => {
                             //         console.log("finsh all" , item);
                             //         res.json(true);
@@ -61,8 +70,8 @@ function setToranutThisMonth(url, MongoClient, req, res) {
                                
                             //     });
 
-                                Promise.all([promise1,proimse2,proimse3]).then(value => {
-                                //    console.log("finsh all");
+                                Promise.all([proimse2,proimse3]).then(value => {
+                                   console.log("finsh all");
                                     res.json(true);
                                     db.close();
                                 });
@@ -96,7 +105,7 @@ function setToranutThisMonth(url, MongoClient, req, res) {
                 //         };
                 //         console.log("goodPlace" , goodPlace);
                 //         if(goodPlace == true) {
-                //             dbo.collection("toranutsthismonth").insertOne(newData);
+                //             dbo.collection("toranots").insertOne(newData);
                 //             console.log(data);
                 //             var myPoints = data.points + 1;
                 //             //console.log("POINTS",myPoints);
@@ -150,9 +159,9 @@ function AddToranotThisMonth(dbo,data) {
             //console.log("enter data",newData);
             return newData;
         }).then(function(newData) {
-             dbo.collection("toranutsthismonth").insertOne(newData).then(() => {
-          //  console.log("finsh add",newData);
-            resolve(true);
+             dbo.collection("toranots").insertOne(newData).then((element) => {
+            console.log("finsh add toranot",element.ops[0]._id);
+            resolve(element.ops[0]._id);
              
         });
     }));

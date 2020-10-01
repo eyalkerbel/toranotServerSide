@@ -25,8 +25,8 @@ function getThisMonthsToranuts(url, MongoClient, req, res) {
         var dbo = db.db("newmaindb");
       
 
-        dbo.collection("toranutsthismonth")
-          .find({userid:userid })
+        dbo.collection("toranots")
+          .find({userid:userid,"monthTab":0})
           .toArray(function (err, result) {
             if (result.length === 0) {
               // console.log("lookup failed");

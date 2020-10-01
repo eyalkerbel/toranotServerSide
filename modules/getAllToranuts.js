@@ -36,10 +36,14 @@ function getAllToranuts(url, MongoClient, req, res) {
                 if (err) throw err;
                 var sendable = [[] , []];
                 var dbo = db.db("newmaindb");
-                const thisMonthAllPromise = GetDBCollectionAllUsers(dbo,"toranutsthismonth",currentMonth,[]);
-                const thisMonthMyPromise = GetDBCollectionMine(dbo,"toranutsthismonth",currentMonth,idUser);
-                const nextMonthAllPromise = GetDBCollectionAllUsers(dbo,"toranutsnextmonth",nextMonth,[]);
-                const nextMonthMyPromise = GetDBCollectionMine(dbo,"toranutsnextmonth",nextMonth,idUser);
+                console.log("openMongoClient");
+                dbo.collection("toranots").createIndex({idUser: 1});
+                dbo.collection("toranots").createIndex({idUser: 1});
+
+                const thisMonthAllPromise = GetDBCollectionAllUsers(dbo,0,[]);
+                const thisMonthMyPromise = GetDBCollectionMine(dbo,0,idUser);
+                const nextMonthAllPromise = GetDBCollectionAllUsers(dbo,1,[]);
+                const nextMonthMyPromise = GetDBCollectionMine(dbo,1,idUser);
                 Promise.all([thisMonthAllPromise,thisMonthMyPromise,nextMonthAllPromise,nextMonthMyPromise]).then(value => {
                 //  console.log("values" , value);
                   sendable[0].push(value[0]);
@@ -49,93 +53,7 @@ function getAllToranuts(url, MongoClient, req, res) {
                   res.json(sendable);
                   db.close();
                 });
-                // dbo.collection("toranutsthismonth")
-                //     .find({})
-                //     .toArray(function (err, result) {
-                //         if (result.length === 0) {
-                //             console.log("lookup failed 0 0");
-                //         } else {
-                //             for(var i=0;i<result.length;i++) {
-                //                 var newDate = new Date(result[i].date);
-                //                 // console.log("vs" , currentMonth , "  ,  " , newDate.getMonth())
-                //                if(currentMonth == newDate.getMonth()) {
-                //                 tempAllThisMonth.push(result[i]);
-                //                }
-                //               }
-                //         }
-                //         sendable[0].push(tempAllThisMonth);
-                //         console.log("succsedd 0 0 ");
-
-
-                //     });
-                //     dbo
-                //     .collection("toranutsthismonth")
-                //     .find({userid:userid })
-                //     .toArray(function (err, result) {
-                //       if (result.length === 0) {
-                //         console.log("lookup failed 0 1");
-                //        // res.status(400).json([])
-                //       } else {
-                //         for(var i=0;i<result.length;i++) {
-                //           var newDate = new Date(result[i].date);
-                //          if(currentMonth == newDate.getMonth()) {
-                //             tempMyThisMonth.push(result[i]);
-                //          }
-                //         }
-                       
-                //       }
-                //       sendable[0].push(tempMyThisMonth);
-                //       console.log("succsedd 0 1 ");
-                //     });
-                //     console.log("tempthismonth" , tempThisMonth);
-
-                
-                // dbo.collection("toranutsnextmonth")
-                //     .find({})
-                //     .toArray(function (err, result) {
-                //     //    console.log("resnex" , result);
-                //         if (result.length === 0) {
-                //             console.log("lookup failed 1 0");
-                //             //res.json(sendable)
-                //             sendable[1].push([]);
-                //         } else {
-                //             console.log("res" , result);
-                //             for(var i=0;i<result.length;i++) {
-                //                 var newDate = new Date(result[i].date);
-                //                if(nextMonth == newDate.getMonth()) {
-                //                 //  console.log("vs" , currentMonth , "  ,  " , newDate.getMonth())
-                //                 tempAllNextMonth.push(result[i]);
-                //                }
-                //               }
-                //               sendable[1].push(tempAllNextMonth);
-                //               console.log("succseed 1 0");
-
-                //             //console.log("sensable" ,sendable)
-                //           //  res.json(sendable)
-                //         }
-                //     });
-                //     dbo
-                //     .collection("toranutsnextmonth")
-                //     .find({userid:userid})
-                //     .toArray(function (err, result) {
-                //       if (result.length === 0) {
-                //         console.log("lookup failed walla");
-                //         sendable[1].push([]);
-                //       } else {
-                //         for(var i=0;i<result.length;i++) {
-                //           var newDate = new Date(result[i].date);
-                //          if(nextMonth == newDate.getMonth()) {
-                //             tempMyNextMonth.push(result[i]);
-                //          }
-                //         }
-                //         console.log("tempMyNextMonth" ,tempMyNextMonth)
-                //         sendable[1].push(tempMyNextMonth);
-                //         console.log("sendavle" ,  sendable[0]  , sendable[1]);
-                //       }
-                //       console.log("finsih getall")
-                //       res.json(sendable);
-                //       db.close();
-                //     });
+               
 
 
             }
@@ -144,28 +62,16 @@ function getAllToranuts(url, MongoClient, req, res) {
 }
 
 
-function GetDBCollectionAllUsers(dbo,collectionName,Month,tempAllThisMonth) {
+function GetDBCollectionAllUsers(dbo,month,tempAllThisMonth) {
+  console.log("ALLL");
+
+return new Promise(resolve => dbo.collection("toranots").find({"monthTab": month}).toArray(async function(err,result) {
  
-return new Promise(resolve => dbo.collection(collectionName).find({}).toArray(async function(err,result) {
- 
-    // var _id = re.idUser;
-    // var newDate = new Date(re.date);
-    // if(Month == newDate.getMonth()) {
-    //   const userDetails = await getDetails(dbo,_id);
-    //   if(userDetails != null) {
-    //     var tempi = {
-    //      _id: re._id,
-    //      date: re.date,
-    //      toran : re.toran,
-    //      userDetails : userDetails
-    //     }
-    //  }
-    // tempAllThisMonth.push(tempi);
-    //   }
+    console.log("find result");
     tempAllThisMonth = await getToranotItemForFronted(dbo,result);
 
 
-// console.log("tempAll" , tempAllThisMonth);
+console.log("finishALL");
 resolve(tempAllThisMonth);
 
 
@@ -183,20 +89,13 @@ resolve(tempAllThisMonth);
 }
 
 
-function GetDBCollectionMine(dbo,collectionName,Month,idUser) {
+function GetDBCollectionMine(dbo,month,idUser) {
    tempMyThisMonth = [];
    console.log("mineeesss",idUser);
-  // console.log("id is" , idUser);
-return new Promise(resolve => dbo.collection(collectionName).find({"idUser": new ObjectId(idUser)}).toArray(async function(err,result) {
-  // console.log("result mine", result);
-  // for(var i=0;i<result.length;i++) {
-  //   var newDate = new Date(result[i].date);
-  //   // console.log("vs" , currentMonth , "  ,  " , newDate.getMonth())
-  //  if(Month == newDate.getMonth()) {
-  //   tempMyThisMonth.push(result[i]);
-  //  }
-  // }
+  return new Promise(resolve => dbo.collection("toranots").find({"idUser": new ObjectId(idUser),"monthTab": month}).toArray(async function(err,result) {
+  console.log("find resultmine");
   tempMyThisMonth = await getToranotItemForFronted(dbo,result);
+  console.log("finish Mine");
   resolve(tempMyThisMonth);
 
 }));

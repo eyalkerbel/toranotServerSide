@@ -28,12 +28,12 @@ function getUsersAndToranuts(url, MongoClient, req, res) {
                     if (err) throw err;
                     var dbo = db.db("newmaindb");
                     var sendable = [];
-                    const toranimThisMonthPromise = returnDBPromise(dbo, "toranimThisMonth");
-                    const toranimNextMonthPromise = returnDBPromise(dbo,"toranimNextMonth");
-                    const toranutsthismonthPromise = returnDBPromisetoranot(dbo,"toranutsthismonth");
-                    const toranutsnextmonthPromise = returnDBPromisetoranot(dbo, "toranutsnextmonth");
+                    const toranimThisMonthPromise = returnDBPromise(dbo, 1 );
+                    const toranimNextMonthPromise = returnDBPromise(dbo,0);
+                     const toranutsthismonthPromise = returnDBPromisetoranot(dbo, 0);
+                     const toranutsnextmonthPromise = returnDBPromisetoranot(dbo, 1); //"toranutsnextmonth"
                     Promise.all([toranimThisMonthPromise,toranimNextMonthPromise,toranutsthismonthPromise,toranutsnextmonthPromise]).then(value => {
-                    //   console.log("values" , value[0] , "1" , value[1] , "2" ,value[2]);
+                        console.log("valuesss" , value[0] , "1" , value[1]);
                         res.json(value);
                         db.close();
                     });
@@ -43,20 +43,27 @@ function getUsersAndToranuts(url, MongoClient, req, res) {
 
 }
 
-function returnDBPromisetoranot(dbo,nameCollection) {
+function returnDBPromisetoranot(dbo,monthTab) {
     var temp = [];
-     return new Promise(resolve => dbo.collection(nameCollection).find({}).toArray().then(async elements => {
+    console.log("returnDBPromisetoranot");
+     return new Promise(resolve => dbo.collection("toranots").find({"monthTab":monthTab}).toArray().then(async elements => {
                      temp = await getToranotItemForFronted(dbo,elements);              
-                        console.log("finsihforeach",temp);
                          resolve(temp);
                       
                     }));
-                }
+}
 
-function returnDBPromise(dbo,nameCollection) {
-    return new Promise(resolve =>dbo.collection(nameCollection).find({}).toArray(function (err, result) {
-         resolve(result);
-}));
+function returnDBPromise(dbo,monthTab) {
+    return new Promise(resolve => dbo.collection("toranots").aggregate([
+        {$lookup:  {
+            from: "users",
+            localField: "idUser",
+            foreignField: "_id",
+            as: "userDetails"
+        }},
+        {$unwind: "$userDetails"},
+        {$match: {"monthTab": monthTab}} 
+     ]).toArray().then(elements =>  resolve(elements)));
 }
 
 

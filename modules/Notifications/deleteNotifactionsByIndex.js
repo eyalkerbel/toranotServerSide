@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
 const Joi = require("joi");
-
-function addTotanotChange(url,MongoClient,req,res) {
+const {ObjectId} = require("mongodb");
+const deleteNotifications = require("./deleteNotifications");
+function deleteNotifactionsByIndex(url,MongoClient,req,res) {
     var BearerHeader = req.headers["authorization"];
     var splitted = BearerHeader.split(" ");
     jwt.verify(splitted[1], "iamthesecretkey", (err, verified) => {
@@ -11,21 +12,12 @@ function addTotanotChange(url,MongoClient,req,res) {
       }
       console.log("verfid" , verified);
       var obi = verified.payload;
-      if(obi.userid != null) {
-        var userid = obi.userid;
-      } else {
-        var userid = obi.sn;
-      }
-      var name = obi.name;
-      console.log("userid hadd",userid);
+      var idUser = obi._id;
+      console.log("deleteNotificationByIndex",req.body);
+      const {indexDeleting} = req.body;
       // console.log("req.body" , req.body);
       var data = req.body;
-      var noti = {
-        oldData: req.body.oldDate,
-        newDate: req.body.newDate,
-        seen: false,
-        action: "change"
-      }
+    
    // console.log("send message beckend",names)
     MongoClient.connect(
         url,
@@ -33,14 +25,13 @@ function addTotanotChange(url,MongoClient,req,res) {
           useNewUrlParser: true,
           useUnifiedTopology: true
         },
-         function (err, db) {
+         async function (err, db) {
           if (err) throw err;
           var dbo = db.db("newmaindb");
-          console.log("req body" , req.body);
-          dbo.collection("toranotexchanges").insert(data).then(() => db.close());
-   
-});
-});
+          console.log("deleteNotifByIndex");
+          deleteNotifications(dbo,idUser,indexDeleting).then(() => db.close());
+         })
+        });
 }
 
-module.exports = addTotanotChange;
+module.exports = deleteNotifactionsByIndex;

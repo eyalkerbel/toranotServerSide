@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const Joi = require('joi');
 const { ObjectId } = require('mongodb');
-
+const addNewNotificationForManager = require("../Notifications/addNewNotificationForManager");
 
 function SendMessageAgain(url,MongoClient,req,res) {
     var BearerHeader = req.headers["authorization"];
@@ -16,7 +16,7 @@ function SendMessageAgain(url,MongoClient,req,res) {
       //    var userids = obi.userid;
         var data = req.body;
        const {item , message, sendTo,fisrtTime} = data;
-        console.log("item" , item , "message" , message);
+        console.log("item" , item , "message" , message , sendTo , fisrtTime);
         //  console.log("userid" , userids);
           MongoClient.connect(url ,{useNewUrlParser: true,
             useUnifiedTopology: true},
@@ -28,13 +28,20 @@ function SendMessageAgain(url,MongoClient,req,res) {
               //    });
                 }
                 if(sendTo == "user") {
-                dbo.collection("toranotexchanges").updateOne({ "_id":ObjectId(item.id)},{"$set":{"oldMessage": message,"status": "asking"}},{upsert: true},function(err, response) {  
+                dbo.collection("toranotexchanges").updateOne({ "_id":ObjectId(item.id)},{"$set":{"oldMessage": message,"status": "asking"}},{upsert: true},function(err, response) { 
+                  db.close();
+ 
                 });
                 } else { // taking with manager
-                  dbo.collection("toranotexchanges").updateOne({ "_id":ObjectId(item.id)},{"$set":{"oldMessage": message,"status": "convincing"}},{upsert: true},function(err, response) {  
-                  });
-                }
+                  const promise1 = dbo.collection("toranotexchanges").updateOne({ "_id":ObjectId(item.id)},{"$set":{"oldMessage": message,"status": "convincing"}},{upsert: true}); 
+                  const promise2 = addNewNotificationForManager(dbo,ObjectId(item.id),"askManager");
+                  Promise.all([promise1,promise2]).then(values => {
                     db.close();
+
+                  })
+
+                 
+                }
         });
 });
 }

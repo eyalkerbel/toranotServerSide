@@ -13,7 +13,7 @@ function setCurrentToranim(url,MongoClient,req,res) {
       console.log(verified);
       var obi = verified.payload;
       var userid = obi.userid;
-      console.log(req.body.arrayUsers);
+      console.log("req.body settoran" , req.body.arrayUsers);
       const {arrayUsers} = req.body
       console.log("toranimThisMonth" , arrayUsers);
       console.log("userid hadd",userid);
@@ -27,55 +27,74 @@ function setCurrentToranim(url,MongoClient,req,res) {
           if (err) throw err;
           var dbo = db.db("newmaindb");
 
-        //   dbo.collection("toranimThisMonth").deleteMany({},function(err,response) {
-        //   });
-        //   dbo.collection("toranimNextMonth").deleteMany({},function(err,response) {
-        // });
-            for(var i=0;i<arrayUsers.length;i++) {
-                var element = arrayUsers[i];
-                console.log("elemnt" , element);
-                if(element.monthValue == 0) {
-                    if(element.isChosen == false) {
-                        dbo.collection("toranimThisMonth").insert(element.item , function(err, res) {
-                      
-                        if(i == arrayUsers.length -1) {
-                            db.close();
-                        }    
-                    });
-                    } else {
-                        dbo.collection("toranimThisMonth").deleteOne({ _id: element.item._id} , function(err,response) {
-                            if(i == arrayUsers.length -1) {
-                                db.close();
-                            }     
-                        }); 
-                       
+   // //    dbo.collection("toranimThisMonth").deleteMany({},function(err,response) {
+   // //       });
+   // //       dbo.collection("toranimNextMonth").deleteMany({},function(err,response) {
+   // //     });
+   dbo.collection("toranim").createIndex({idUser: 1, monthTab:1 });
+
+            const promiseArray = [];
+            for(const element of arrayUsers) {
+                if(element.isChosen == false) {
+                    console.log("enter to add" , element.item.userDetails._id );
+
+                    var toranObject = {
+                    idUser:new ObjectId(element.item.userDetails._id),
+                    monthTab: element.monthValue
                     }
+                    const promise = dbo.collection("toranim").insert(toranObject);
+                    promiseArray.push(promise);
                 } else {
-                    if(element.isChosen == false) {
-                        dbo.collection("toranimNextMonth").insert(element.item , function(err, res) {
-                            if(i == arrayUsers.length -1) {
-                                db.close();
-                            }    
-                        });
-                    } else {
-                        dbo.collection("toranimNextMonth").deleteOne({ _id: element.item._id} , function(err,response) {
-                            if(i == arrayUsers.length -1) {
-                                db.close();
-                            }    
-                        });
-                    }
-                }
+                    console.log("enter to delete" , element.item.userDetails._id );
+                    const promise = dbo.collection("toranim").deleteOne({"idUser":new ObjectId(element.item.userDetails._id), "monthTab":element.item.monthTab});
+                    promiseArray.push(promise);
+                } 
             }
+            Promise.all(promiseArray).then(values => {
+                console.log("finish-setToranim",);
+                db.close();
+            });
 
-
-        //   dbo.collection("toranimThisMonth").remove({},function(err , response) {
-        //     dbo.collection("toranimThisMonth").insertMany(arrayUsers[0][0]);
-
-        //   });
-        //   dbo.collection("toranimNextMonth").remove({},function(err , response) {
-        //     dbo.collection("toranimNextMonth").insertMany(arrayUsers[1][0]);
-
-        // });
+   
+        // //   dbo.collection("toranimThisMonth").deleteMany({},function(err,response) {
+        // //   });
+        // //   dbo.collection("toranimNextMonth").deleteMany({},function(err,response) {
+        // // });
+        //     for(var i=0;i<arrayUsers.length;i++) {
+        //         var element = arrayUsers[i];
+        //         console.log("elemnt" , element);
+        //         if(element.monthValue == 0) {
+        //             if(element.isChosen == false) {
+        //                 dbo.collection("toranimThisMonth").insert(element.item , function(err, res) {
+                      
+        //                 if(i == arrayUsers.length -1) {
+        //                     db.close();
+        //                 }    
+        //             });
+        //             } else {
+        //                 dbo.collection("toranimThisMonth").deleteOne({ _id: element.item._id} , function(err,response) {
+        //                     if(i == arrayUsers.length -1) {
+        //                         db.close();
+        //                     }     
+        //                 }); 
+                       
+        //             }
+        //         } else {
+        //             if(element.isChosen == false) {
+        //                 dbo.collection("toranimNextMonth").insert(element.item , function(err, res) {
+        //                     if(i == arrayUsers.length -1) {
+        //                         db.close();
+        //                     }    
+        //                 });
+        //             } else {
+        //                 dbo.collection("toranimNextMonth").deleteOne({ _id: element.item._id} , function(err,response) {
+        //                     if(i == arrayUsers.length -1) {
+        //                         db.close();
+        //                     }    
+        //                 });
+        //             }
+        //         }
+        //     }
 
         });
 });

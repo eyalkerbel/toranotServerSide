@@ -29,14 +29,10 @@ function sendStatusShmirot(url,MongoClient,req,res) {
           console.log("temp" , temp , " month " , month , req.body);
       
       const promises = temp.map(async tempi => { 
-            if(month == 0) {
-           //   console.log("_id" , temp[i].id)
-              return updateUserStatus(dbo,tempi,"toranutsthismonth");
-            }
-              else {
-               return updateUserStatus(dbo,tempi,"toranutsnextmonth");
-              }
-            })
+
+               return updateUserStatus(dbo,tempi,"toranots");
+            //  }
+            });
           Promise.all(promises).then(() => {
             console.log("finsh");
           db.close();
@@ -48,6 +44,7 @@ function sendStatusShmirot(url,MongoClient,req,res) {
 }
 
 function updateUserStatus(dbo,temp,collectionName) {
+  console.log("temp" , temp);
   return new Promise(resolve => dbo.collection(collectionName).updateOne({"_id" : ObjectId(temp.id)}, {"$set":{"userStatus": temp.status}},{upsert: true},function(err,response){
     resolve(response);
 }));

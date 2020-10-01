@@ -15,6 +15,8 @@ const getHaadafot = require("./modules/getHaadafot.js");
 const setHaadafot = require("./modules/setHaadafot.js");
 const getUsersAndToranuts = require("./modules/getUsersAndToranuts");
 const setToranutThisMonth = require("./modules/setToranutThisMonth");
+const setToranot = require("./modules/setToranot");
+const deleteToranot = require("./modules/deleteToranot");
 const deleteToranutThisMonth = require("./modules/deleteToranutThisMonth")
 const setToranutNextMonth = require("./modules/setToranutNextMonth");
 const deleteToranutNextMonth = require("./modules/deleteToranutNextMonth");
@@ -26,16 +28,17 @@ const getPiority = require("./modules/getPiority");
 const getPiorityByUser = require("./modules/getPiorityByUser");
 const sendMessage = require("./modules/sendMessage");
 const getMessage = require("./modules/getMessage");
-const getNotifaction = require("./modules/getNotifaction")
-const addTotanotChange = require("./modules/addToranotChange");
-const getExchangesAndTornot =  require("./modules/getExchangesAndTornot");
-const approveExchange = require("./modules/approveExchange");
-const getExchangeToApprove = require("./modules/getExchangeToApprove");
-const updateExchangeAnswer = require("./modules/updateExchangeAnswer");
-const SendMessageAgain = require("./modules/SendMessageAgain");
+const getNotifaction = require("./modules/Notifications/getNotifaction")
+const addTotanotChange = require("./modules/toranotExchange/addToranotChange");
+const getExchangesAndTornot =  require("./modules/toranotExchange/getExchangesAndTornot");
+const approveExchange = require("./modules/toranotExchange/approveExchange");
+const getExchangeToApprove = require("./modules/toranotExchange/getExchangeToApprove");
+const updateExchangeAnswer = require("./modules/toranotExchange/updateExchangeAnswer");
+const SendMessageAgain = require("./modules/toranotExchange/SendMessageAgain");
 const sendStatusShmirot = require("./modules/sendStatusShmirot");
 const getAllUsers = require("./modules/getAllUsers");
 const sendcurrenttoranim = require("./modules/setCurrentToranim");
+const deleteNotifactionsByIndex = require("./modules/Notifications/deleteNotifactionsByIndex");
 //middleware for json
 app.use(express.json());
 //middleware for allowing fetch from different port 
@@ -64,9 +67,9 @@ app.post("/api/checkuser", (req, res) => {
   console.log("hi");
   console.log(req.body);
   console.log('dsnds');
-
   checkUser(url, MongoClient, req, res);
 });
+
 app.post("/api/registeruser", (req,res) => {
   console.log("registekxkr");
 register(url,MongoClient,req,res);
@@ -86,8 +89,16 @@ app.post("/api/getpioritybyuser", (req, res) => {
   getPiorityByUser(url, MongoClient, req, res);
 });
 
+app.post("/api/deletenotifications", (req,res) => {
+  deleteNotifactionsByIndex(url,MongoClient,req,res);
+});
+
 app.post("/api/getpersondata", (req,res) => {
   getPersonData(url,MongoClient,req,res);
+});
+app.post("/api/settoranot" , (req,res) => {
+  setToranot(url,MongoClient,req,res);
+
 });
 
 app.post("/api/settoranutthismonth", (req, res) => {
@@ -97,6 +108,11 @@ app.post("/api/settoranutthismonth", (req, res) => {
 
 app.post("/api/getallhaadafot", (req,res) => {
   getAllHaadafot(url,MongoClient,req,res);
+});
+
+app.post("/api/deletetoranot" , (req,res) => {
+  console.log("delteToranot");
+  deleteToranot(url,MongoClient,req,res);
 });
 
 app.post("/api/deletetoranutthismonth", (req, res) => {
@@ -144,6 +160,10 @@ app.post("/api/getusersandtoranuts", (req, res) => {
 app.post("/api/sendmessage", (req,res) => {
   sendMessage(url,MongoClient,req,res);
 });
+
+// app.post("/api/cancelrequest" ,(req,res) => {
+//   cancelRequest(url,MongoClient,req,res);
+// });
 
 app.post("/api/getmessagebyid", (req,res) => {
   console.log("index get massage");

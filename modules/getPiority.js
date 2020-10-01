@@ -16,7 +16,7 @@ const jwt = require("jsonwebtoken");
         function (err, db) {
           if (err) throw err;
           var dbo = db.db("newmaindb");
-          dbo.collection("toranutsthismonth").find({}).toArray(async function(err,resultToranot){
+          dbo.collection("toranots").find({}).toArray(async function(err,resultToranot){
             // console.log("all");
               resultToranot.forEach(el => {
                 var date = new Date(el.date)
