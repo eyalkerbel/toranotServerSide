@@ -15,6 +15,7 @@
     "react-notification-center": "^1.2.2",
     "react-notifications-menu": "^1.0.1",
     "react-redux": "^7.2.1",
+    "react-search-input": "^0.11.3",
     "shortid": "^2.2.15"
   },
   "devDependencies": {
@@ -31,8 +32,8 @@
   "author": "benji",
   "license": "ISC",
   "engines": {
-    "node": "12.15.0",
-    "npm": "6.9.0",
+    "node": "12.18.0",
+    "npm": "5.9.0",
     "yarn": " 1.22.4"
   }
 }
