@@ -3,7 +3,7 @@ const {ObjectId} = require("mongodb");
 
 function deleteNotifications(dbo,idUser,selectValue) {
 console.log("seletcValue", selectValue)
-
+const array  = []
     if(selectValue == 0) {
 return new Promise(resolve => dbo.collection("notifications").aggregate([
     { $lookup:  {
@@ -20,10 +20,12 @@ return new Promise(resolve => dbo.collection("notifications").aggregate([
 ]).forEach(doc =>
   { 
     console.log("doc" , doc);
-    dbo.collection("notifications").deleteOne({"_id": doc._id})
+    array.push(dbo.collection("notifications").deleteOne({"_id": doc._id}));
   }).then(() => {
+    Promise.all(array).then(values => { 
     console.log("finish");
- resolve(true)
+ resolve(true);
+    });
 }));
 }
 

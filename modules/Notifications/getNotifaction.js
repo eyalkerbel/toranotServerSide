@@ -14,7 +14,7 @@ function getNotifaction(url,MongoClient,req,res) {
           var userids = obi.userid;
         //  console.log("userid" , userids);
         var idUser = obi._id;
-        console.log("isUser" , idUser);
+      //   console.log("isUser" , idUser);
           MongoClient.connect(url ,{useNewUrlParser: true,
             useUnifiedTopology: true},
             function (err, db) {
@@ -82,7 +82,7 @@ function getNotifaction(url,MongoClient,req,res) {
                   ]).toArray().then(result => resolve(result)));
 
                   Promise.all([promise1,promise2]).then(values => {
-                    console.log("values" , values[0]);
+                  //  console.log("values" , values[0]);
                       sendable.push(values[0]);
                       sendable.push(values[1]);
                       res.json(sendable);
@@ -126,7 +126,7 @@ function getNotifaction(url,MongoClient,req,res) {
                   ]).toArray().then(result => result);
                 
                   Promise.all([promise1]).then(values => {
-                    console.log("values" , values[0][0]);
+                    //console.log("values" , values[0][0]);
                     sendable.push(values[0]);
                     res.json(sendable);
                     db.close();

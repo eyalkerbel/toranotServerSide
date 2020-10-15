@@ -5,7 +5,7 @@ const { Console } = require('console');
 const { resolve } = require('path');
 const getToranotItemForFronted = require("./MongoEzer/getToranotItemForFronted");
 
-function getUsersAndToranuts(url, MongoClient, req, res) {
+function getUsersAndToranuts(url, MongoClient, req, res,db) {
     var BearerHeader = req.headers["authorization"];
     var splitted = BearerHeader.split(" ");
     jwt.verify(splitted[1], "iamthesecretkey", (err, verified) => {
@@ -18,28 +18,28 @@ function getUsersAndToranuts(url, MongoClient, req, res) {
         var data = req.body;
       //  console.log("req body" , data);
         // if (permissionlvl === "admin") {
-            MongoClient.connect(
-                url,
-                {
-                    useNewUrlParser: true,
-                    useUnifiedTopology: true
-                },
-                function (err, db) {
-                    if (err) throw err;
-                    var dbo = db.db("newmaindb");
+            // MongoClient.connect(
+            //     url,
+            //     {
+            //         useNewUrlParser: true,
+            //         useUnifiedTopology: true
+            //     },
+            //     function (err, db) {
+            //         if (err) throw err;
+            //         var dbo = db.db("newmaindb");
                     var sendable = [];
-                    const toranimThisMonthPromise = returnDBPromise(dbo, 1 );
-                    const toranimNextMonthPromise = returnDBPromise(dbo,0);
+                    const toranimThisMonthPromise = returnDBPromise(dbo,0);
+                    const toranimNextMonthPromise = returnDBPromise(dbo,1);
                      const toranutsthismonthPromise = returnDBPromisetoranot(dbo, 0);
                      const toranutsnextmonthPromise = returnDBPromisetoranot(dbo, 1); //"toranutsnextmonth"
                     Promise.all([toranimThisMonthPromise,toranimNextMonthPromise,toranutsthismonthPromise,toranutsnextmonthPromise]).then(value => {
                         console.log("valuesss" , value[0] , "1" , value[1]);
                         res.json(value);
-                        db.close();
+                      //  db.close();
                     });
                 }
             )
-    });
+    // });
 
 }
 
@@ -54,7 +54,7 @@ function returnDBPromisetoranot(dbo,monthTab) {
 }
 
 function returnDBPromise(dbo,monthTab) {
-    return new Promise(resolve => dbo.collection("toranots").aggregate([
+    return new Promise(resolve => dbo.collection("toranim").aggregate([
         {$lookup:  {
             from: "users",
             localField: "idUser",

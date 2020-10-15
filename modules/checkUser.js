@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const Joi = require("joi");
 
-function checkUser(url, MongoClient, req, res) {
+function checkUser(url, MongoClient, req, res,db) {
   //console.log("Check",req.headers);
   const data = req.body;
   console.log("checkuserStarting",data);
@@ -20,12 +20,12 @@ function checkUser(url, MongoClient, req, res) {
     var username = req.body.username;
     var password = req.body.password;
     console.log(username,password);
-        MongoClient.connect(
-      url,
-      { useNewUrlParser: true, useUnifiedTopology: true },
-      function (err, db) {
-        if (err) throw err;
-        console.log("dbo")
+      //   MongoClient.connect(
+      // url,
+      // { useNewUrlParser: true, useUnifiedTopology: true },
+      // function (err, db) {
+      //   if (err) throw err;
+      //   console.log("dbo")
         var dbo = db.db("newmaindb");
         dbo.collection("users").find({$or:[ {'userid':username}, {'sn':username}]}).toArray(function (err, result) {
             if (result.length === 0) {
@@ -57,9 +57,9 @@ function checkUser(url, MongoClient, req, res) {
                 res.status(400).json("wrong password");
               }
             }
-            db.close();
-          });
-      }
+         //   db.close();
+      //     });
+       }
     );
   } else {
     res.status(400).json("invalid schema")

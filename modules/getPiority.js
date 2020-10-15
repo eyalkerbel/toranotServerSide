@@ -1,20 +1,20 @@
 const jwt = require("jsonwebtoken");
 
 
- function getPiority(url, MongoClient, req, res) {
+ function getPiority(url, MongoClient, req, res,db) {
     var userid = req.body.userid;
   //  console.log("userid",userid);
 
     let occupiedDay = [];
 
-    MongoClient.connect(
-        url,
-        {
-          useNewUrlParser: true,
-          useUnifiedTopology: true
-        },
-        function (err, db) {
-          if (err) throw err;
+    // MongoClient.connect(
+    //     url,
+    //     {
+    //       useNewUrlParser: true,
+    //       useUnifiedTopology: true
+    //     },
+    //     function (err, db) {
+    //       if (err) throw err;
           var dbo = db.db("newmaindb");
           dbo.collection("toranots").find({}).toArray(async function(err,resultToranot){
             // console.log("all");
@@ -44,7 +44,7 @@ const jwt = require("jsonwebtoken");
             });
 
 
-});
+// });
 
 
 }

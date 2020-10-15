@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-function getPiorityByUser(url, MongoClient, req, res) {
+function getPiorityByUser(url, MongoClient, req, res,db) {
 
 
    // console.log("get piorirty" , req.body);
@@ -15,16 +15,14 @@ function getPiorityByUser(url, MongoClient, req, res) {
  //   var yhas = 100 / 3;
 
     let haadafotUser = [];
- MongoClient.connect(
-    url,
-    { useNewUrlParser: true, useUnifiedTopology: true },
-    function (err, db) {
-      if (err) throw err;
+//  MongoClient.connect(
+//     url,
+//     { useNewUrlParser: true, useUnifiedTopology: true },
+//     function (err, db) {
+//       if (err) throw err;
       var dbo = db.db("newmaindb");
-      dbo
-        .collection("haadafottest")
-        .find({ userid })
-        .toArray(function (err, resultHaadafot) {
+      dbo.collection("haadafottest").find({ userid }).toArray(function (err, resultHaadafot) {
+          if(resultHaadafot != undefined) {
             resultHaadafot.forEach(el => {
             let date1 = new Date(el.begindate)
             let date2 = new Date(el.enddate)
@@ -33,12 +31,15 @@ function getPiorityByUser(url, MongoClient, req, res) {
             for(var i=startDay;i<=endDay-1;i++) {
                 haadafotUser.push(i);
                 if( i == endDay-1) {
-                    db.close();
+                   // db.close();
                 }
             }
             });
+        } else {
+
+        }
           
-        });
+        // });
     }
   );
 

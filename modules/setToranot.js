@@ -2,10 +2,10 @@ const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const {ObjectId} = require("mongodb");
 const addNewNotification = require("./Notifications/addNewNotification");
-function setToranot(url,MongoClient,req,res) {
+ function setToranot(url,MongoClient,req,res,db) {
     var BearerHeader = req.headers["authorization"];
     var splitted = BearerHeader.split(" ");
-    jwt.verify(splitted[1], "iamthesecretkey", (err, verified) => {
+    jwt.verify(splitted[1], "iamthesecretkey", async (err, verified) => {
         if (err !== null) {
             res.status(400).json("invalid jwt")
             return;
@@ -14,15 +14,15 @@ function setToranot(url,MongoClient,req,res) {
         var obi = verified.payload;
         var permissionlvl = obi.permissionlvl;
         var data = req.body;
-        console.log("new",data);
-        MongoClient.connect(
-            url,
-            {
-                useNewUrlParser: true,
-                useUnifiedTopology: true
-            },
-              async function (err, db) {
-                if (err) throw err;
+        // console.log("new",data);
+        // MongoClient.connect(
+        //     url,
+        //     {
+        //         useNewUrlParser: true,
+        //         useUnifiedTopology: true
+        //     },
+        //       async function (err, db) {
+        //         if (err) throw err;
                 var dbo = db.db("newmaindb");
                 await NotInHaadfot(dbo,data).then(goodPlace => {
                     console.log("resolve", goodPlace);
@@ -30,16 +30,26 @@ function setToranot(url,MongoClient,req,res) {
                        db.close();
                     } else {
                         const proimse2 =  new Promise(resolve => dbo.collection("users").findOneAndUpdate({userid:data.userid}, {$inc: {'points': 1 } }, {new: true }).then(() => resolve(true)));
-                        const proimse3 = AddToranotThisMonth(dbo,data).then(_id => addNewNotification(dbo,_id,ObjectId(obi._id),"addToranot"));
-                        Promise.all([proimse2,proimse3]).then(value => {
+                        const proimse3 = AddToranotThisMonth(dbo,data);
+                            
+                            Promise.all([proimse3]).then(values => {
+                                res.json(values[0]);
+                            const promise4 = addNewNotification(dbo,values[0]._id,ObjectId(obi._id),"addToranot");
+
+                        
+
+
+                        Promise.all([proimse2,promise4]).then(valuess => {
                             console.log("finsh all");
-                             res.json(true);
-                             db.close();
+                           //  res.json(values[3]);
+                          //   db.close();
                         });
+                    });
+
                     }
                 });
             });
-        });
+   //     });
 }
 
 
@@ -63,8 +73,8 @@ function AddToranotThisMonth(dbo,data) {
               return newData;
           }).then(function(newData) {
                dbo.collection("toranots").insertOne(newData).then((element) => {
-              console.log("finsh add toranot",element.ops[0]._id);
-              resolve(element.ops[0]._id);
+              console.log("finsh add toranot",element.ops[0]);
+              resolve(element.ops[0]);
                
           });
       }));

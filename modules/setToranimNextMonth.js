@@ -2,7 +2,7 @@ const { ObjectId } = require("mongodb");
 const jwt = require("jsonwebtoken");
 
 
-function setCurrentToranim(url,MongoClient,req,res) {
+function setToranimNextMonth(url,MongoClient,req,res) {
     var BearerHeader = req.headers["authorization"];
     var splitted = BearerHeader.split(" ");
     jwt.verify(splitted[1], "iamthesecretkey", (err, verified) => {
@@ -55,7 +55,6 @@ function setCurrentToranim(url,MongoClient,req,res) {
             }
             Promise.all(promiseArray).then(values => {
                 console.log("finish-setToranim",);
-                res.status(200).json("succsess");
                 db.close();
             });
 
@@ -103,4 +102,4 @@ function setCurrentToranim(url,MongoClient,req,res) {
         });
 });
 }
-module.exports = setCurrentToranim;
+module.exports = setToranimNextMonth;

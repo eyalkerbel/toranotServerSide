@@ -38,7 +38,9 @@ const SendMessageAgain = require("./modules/toranotExchange/SendMessageAgain");
 const sendStatusShmirot = require("./modules/sendStatusShmirot");
 const getAllUsers = require("./modules/getAllUsers");
 const sendcurrenttoranim = require("./modules/setCurrentToranim");
+const sendtoranimNextMonth = require("./modules/setToranimNextMonth");
 const deleteNotifactionsByIndex = require("./modules/Notifications/deleteNotifactionsByIndex");
+const getDataForInitRedux = require("./modules/getDataForInitRedux");
 //middleware for json
 app.use(express.json());
 //middleware for allowing fetch from different port 
@@ -61,18 +63,27 @@ app.use(express.static(__dirname + '/public'));
 
 //logs in
 
-
-
+MongoClient.connect(
+  url,
+  {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+  },
+    async function (err, db) {
+      if (err) throw err;
+      console.log("databbaseconnectio");
+      app.locals.db = db;
+    });
 app.post("/api/checkuser", (req, res) => {
   console.log("hi");
   console.log(req.body);
   console.log('dsnds');
-  checkUser(url, MongoClient, req, res);
+  checkUser(url, MongoClient, req, res,app.locals.db);
 });
 
 app.post("/api/registeruser", (req,res) => {
   console.log("registekxkr");
-register(url,MongoClient,req,res);
+register(url,MongoClient,req,res );
 });
 //not finished create user
 app.post("/api/createuser", (req, res) => {
@@ -86,7 +97,7 @@ app.post("/api/getthismonthstoranuts", (req, res) => {
 });
 app.post("/api/getpioritybyuser", (req, res) => {
   // console.log("getpioritybyuserindex");
-  getPiorityByUser(url, MongoClient, req, res);
+  getPiorityByUser(url, MongoClient, req, res,app.locals.db);
 });
 
 app.post("/api/deletenotifications", (req,res) => {
@@ -97,7 +108,7 @@ app.post("/api/getpersondata", (req,res) => {
   getPersonData(url,MongoClient,req,res);
 });
 app.post("/api/settoranot" , (req,res) => {
-  setToranot(url,MongoClient,req,res);
+  setToranot(url,MongoClient,req,res,app.locals.db);
 
 });
 
@@ -112,7 +123,7 @@ app.post("/api/getallhaadafot", (req,res) => {
 
 app.post("/api/deletetoranot" , (req,res) => {
   console.log("delteToranot");
-  deleteToranot(url,MongoClient,req,res);
+  deleteToranot(url,MongoClient,req,res,app.locals.db);
 });
 
 app.post("/api/deletetoranutthismonth", (req, res) => {
@@ -129,7 +140,7 @@ app.post("/api/deletetoranutnextmonth", (req, res) => {
 });
 
 app.post("/api/getpiority" , (req,res) => {
-  getPiority(url,MongoClient,req,res);
+  getPiority(url,MongoClient,req,res,app.locals.db);
 });
 
 app.post("/api/gethaadafotbyuser", (req,res) => {
@@ -154,7 +165,7 @@ app.post("/api/sethaadafot", (req, res) => {
 });
 
 app.post("/api/getusersandtoranuts", (req, res) => {
-  getUsersAndToranuts(url, MongoClient, req, res);
+  getUsersAndToranuts(url, MongoClient, req, res,app.locals.db);
 });
 
 app.post("/api/sendmessage", (req,res) => {
@@ -209,8 +220,15 @@ app.post("/api/getallusers" , (req,res) => {
 
 app.post("/api/sendcurrenttoranim" , (req,res) => {
   sendcurrenttoranim(url,MongoClient,req,res);
-});
+  });
 
+app.post("/api/sendtoranimnextmonth" ,(req,res) => {
+  sendtoranimNextMonth(url,MongoClient,req,res);
+  });
+
+app.post("/api/getdataforinitredux" , (req,res) => {
+  getDataForInitRedux(url,MongoClient,req,res);
+  });
 port = process.env.PORT || 5000;
 
 app.listen(port, console.log("server started on: " + port));
@@ -219,3 +237,5 @@ app.listen(port, console.log("server started on: " + port));
 app.get("/",function(req,res) {
 console.log("hii ")
 });
+
+    // });
