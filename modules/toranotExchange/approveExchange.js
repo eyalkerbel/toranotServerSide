@@ -39,7 +39,7 @@ function approveExchange(url,MongoClient,req,res) {
           console.log("date" , data);          
           if(isApprove == true) {
           const promise1 = dbo.collection("toranotexchanges").updateMany({"_id": ObjectId(exchange_id)},{"$set":{"status": "agree","newMessage": newMessage }},{});
-          const promise2 = addNewNotification(dbo,new ObjectId(toranotOld._id),new ObjectId(idUser),"toranApprove");
+          const promise2 = addNewNotification(dbo,new ObjectId(toranotOld._id),ObjectId(toranotOld.idUser),new ObjectId(idUser),"toranApprove");
          // const promis3 = addNewNotificationManger(dbo,data.index,
           Promise.all([promise1,promise2]).then(values => {
             res.status(200).json("succsees");
@@ -47,7 +47,7 @@ function approveExchange(url,MongoClient,req,res) {
           })
         } else {
           const promise1 = dbo.collection("toranotexchanges").updateMany({"_id": ObjectId(exchange_id)},{"$set":{"status": "reject","newMessage": newMessage}},{});
-          const promise2 = addNewNotification(dbo,new ObjectId(toranotOld._id),new ObjectId(idUser),"toranReject");
+          const promise2 = addNewNotification(dbo,new ObjectId(toranotOld._id),ObjectId(toranotOld.idUser),new ObjectId(idUser),"toranReject");
           Promise.all([promise1,promise2]).then(values => {
             res.status(200).json("succsees");
             db.close();

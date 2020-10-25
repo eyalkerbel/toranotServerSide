@@ -11,9 +11,9 @@ function updateFriendToranot(req,res,db) {
     res.status(200).json();
     });
     if(friendId != null) {
-    addNewNotification(dbo,ObjectId(friendId),ObjectId(userId),"addToranotTogther");
+    addNewNotification(dbo,ObjectId(friendId),ObjectId(friendId),ObjectId(userId),"addToranotTogther");
     } else {
-    addNewNotification(dbo,ObjectId(asisstValue._id),ObjectId(userId),"cancelToranotToghter");
+    addNewNotification(dbo,ObjectId(asisstValue._id),ObjectId(asisstValue._id),ObjectId(userId),"cancelToranotToghter");
     }
 }
 

@@ -41,6 +41,7 @@ const sendcurrenttoranim = require("./modules/setCurrentToranim");
 const sendtoranimNextMonth = require("./modules/setToranimNextMonth");
 const deleteNotifactionsByIndex = require("./modules/Notifications/deleteNotifactionsByIndex");
 const getDataForInitRedux = require("./modules/getDataForInitRedux");
+const updatefriendtoranot = require("./modules/updateFriendToranot");
 //middleware for json
 app.use(express.json());
 //middleware for allowing fetch from different port 
@@ -161,7 +162,7 @@ app.post("/api/gethaadafot", (req, res) => {
 });
 
 app.post("/api/sethaadafot", (req, res) => {
-  setHaadafot(url, MongoClient, req, res);
+  setHaadafot(url, MongoClient, req, res,app.locals.db);
 });
 
 app.post("/api/getusersandtoranuts", (req, res) => {
@@ -227,8 +228,13 @@ app.post("/api/sendtoranimnextmonth" ,(req,res) => {
   });
 
 app.post("/api/getdataforinitredux" , (req,res) => {
-  getDataForInitRedux(url,MongoClient,req,res);
+  getDataForInitRedux(url,MongoClient,req,res,app.locals.db);
   });
+
+  app.post("/api/updatefriendtoranot" ,(req,res) => {
+    updatefriendtoranot(req,res,app.locals.db);
+  });
+
 port = process.env.PORT || 5000;
 
 app.listen(port, console.log("server started on: " + port));

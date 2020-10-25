@@ -30,8 +30,8 @@ const addNewNotification = require("./Notifications/addNewNotification");
                             Promise.all([proimse3,promise31]).then(values => {
                             //    console.log("values" , values)
                                 res.json([values[0],values[1]]);
-                            const promise4 = addNewNotification(dbo,values[0]._id,ObjectId(obi._id),"addToranot");
-                            const promis5 = addNewNotification(dbo,values[1]._id,ObjectId(obi._id),"addToranot");
+                            const promise4 = addNewNotification(dbo,values[0]._id,ObjectId(data.userDetails._id),ObjectId(obi._id),"addToranot");
+                            const promis5 = addNewNotification(dbo,values[1]._id,ObjectId(data.friendDetails._id),ObjectId(obi._id),"addToranot");
 
 
                             });
@@ -39,7 +39,7 @@ const addNewNotification = require("./Notifications/addNewNotification");
                             Promise.all([proimse3]).then(values => {
                             //    console.log("values" , values)
                                 res.json([values[0]]);
-                            const promise4 = addNewNotification(dbo,values[0]._id,ObjectId(obi._id),"addToranot");
+                            const promise4 = addNewNotification(dbo,values[0]._id,ObjectId(data.userDetails._id),ObjectId(obi._id),"addToranot");
                         ///   const promise4 =  addNewNotification(dbo,obi.userDetails._id,ObjectId(obi._id),values[0]._id,"addToranot");
                         
                     });
