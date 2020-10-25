@@ -31,7 +31,7 @@ function checkUser(url, MongoClient, req, res,db) {
             if (result.length === 0) {
               console.log("login failed");
               res.status(400).send("None shall pass");
-            } else {
+            }  {
               if (result[0].password === password) {
                 var permissionlvl = result[0].permissionlvl;
                 console.log("login successful",permissionlvl);

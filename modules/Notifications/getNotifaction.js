@@ -32,7 +32,7 @@ function getNotifaction(url,MongoClient,req,res) {
                       path: "$toranot",
                       preserveNullAndEmptyArrays: true
                     }}, {$match:{
-                      $and:[{"toranot.idUser" : ObjectId(idUser)}]
+                      $or:[{"toranot.idUser" : ObjectId(idUser)} , {"toranotId": ObjectId(idUser)}]
                   } },
                   { $lookup:  {
                     from: "users",
@@ -41,6 +41,14 @@ function getNotifaction(url,MongoClient,req,res) {
                     as: "userDetails" 
                   }}, { $unwind: {
                     path: "$userDetails",
+                    preserveNullAndEmptyArrays: true
+                  }},{ $lookup:  {
+                    from: "users",
+                    localField: "toranotId",
+                    foreignField: "_id",
+                    as: "userDetailsMine" 
+                  }}, { $unwind: {
+                    path: "$userDetailsMine",
                     preserveNullAndEmptyArrays: true
                   }}
                 ]).toArray().then(result => resolve(result)));

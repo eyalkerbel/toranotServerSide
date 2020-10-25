@@ -55,7 +55,9 @@ function addTotanotChange(url,MongoClient,req,res) {
        //   const promise1 = dbo.collection("notifications").insert(noti);
 
           var freindId = await GetIdPersonByToranotId(dbo,req.body.toranotIdOld);
+         // var userId = await GetIdPersonByToranotId(dbo,req.body.toranotIdNew);
           const promise1 = addNewNotification(dbo,ObjectId(req.body.toranotIdNew),freindId,"wantExchange");
+         //const promise1 = addNewNotification(dbo,userd,freindId,ObjectId(req.body.toranotIdNew),"wantExchange")
           const promsie2 = dbo.collection("toranotexchanges").insert(data);
           Promise.all([promise1,promsie2]).then(values => {
                 res.status(200).json("succeed");

@@ -10,42 +10,40 @@ const addNewNotification = require("./Notifications/addNewNotification");
             res.status(400).json("invalid jwt")
             return;
         }
-        console.log(verified);
+        //console.log(verified);
         var obi = verified.payload;
         var permissionlvl = obi.permissionlvl;
         var data = req.body;
-        // console.log("new",data);
-        // MongoClient.connect(
-        //     url,
-        //     {
-        //         useNewUrlParser: true,
-        //         useUnifiedTopology: true
-        //     },
-        //       async function (err, db) {
-        //         if (err) throw err;
+        //console.log("data" , data);
                 var dbo = db.db("newmaindb");
                 await NotInHaadfot(dbo,data).then(goodPlace => {
-                    console.log("resolve", goodPlace);
                     if(goodPlace == false) {
-                       db.close();
+                     //  db.close();
                     } else {
                         const proimse2 =  new Promise(resolve => dbo.collection("users").findOneAndUpdate({userid:data.userid}, {$inc: {'points': 1 } }, {new: true }).then(() => resolve(true)));
                         const proimse3 = AddToranotThisMonth(dbo,data);
-                            
-                            Promise.all([proimse3]).then(values => {
-                                res.json(values[0]);
+                        if(data.friendDetails != null) {
+                            var dataFriend = data;
+
+                            dataFriend["userid"] = data.friendDetails.userDetails.userid;
+                            const promise31 = AddToranotThisMonth(dbo,data);
+                            Promise.all([proimse3,promise31]).then(values => {
+                            //    console.log("values" , values)
+                                res.json([values[0],values[1]]);
                             const promise4 = addNewNotification(dbo,values[0]._id,ObjectId(obi._id),"addToranot");
+                            const promis5 = addNewNotification(dbo,values[1]._id,ObjectId(obi._id),"addToranot");
 
+
+                            });
+                        } else {
+                            Promise.all([proimse3]).then(values => {
+                            //    console.log("values" , values)
+                                res.json([values[0]]);
+                            const promise4 = addNewNotification(dbo,values[0]._id,ObjectId(obi._id),"addToranot");
+                        ///   const promise4 =  addNewNotification(dbo,obi.userDetails._id,ObjectId(obi._id),values[0]._id,"addToranot");
                         
-
-
-                        Promise.all([proimse2,promise4]).then(valuess => {
-                            console.log("finsh all");
-                           //  res.json(values[3]);
-                          //   db.close();
-                        });
                     });
-
+                }
                     }
                 });
             });
@@ -73,7 +71,7 @@ function AddToranotThisMonth(dbo,data) {
               return newData;
           }).then(function(newData) {
                dbo.collection("toranots").insertOne(newData).then((element) => {
-              console.log("finsh add toranot",element.ops[0]);
+             // console.log("finsh add toranot",element.ops[0]);
               resolve(element.ops[0]);
                
           });
@@ -81,11 +79,10 @@ function AddToranotThisMonth(dbo,data) {
   }
 
 function NotInHaadfot(dbo,data) {
-    console.log("userid" , data.userid);
+  //  console.log("userid" , data.userid);
     return new Promise(resolve => dbo.collection("users").findOne({userid:data.userid}).then(elemnt => {
-        console.log("elemnt" ,elemnt);
+     //   console.log("elemnt" ,elemnt);
         dbo.collection("haadafottest").find({idUser:elemnt._id}).toArray().then(items => {
-        console.log("items" , items );
         if(items.length == 0) {
             resolve(true);
         } 
@@ -94,14 +91,14 @@ function NotInHaadfot(dbo,data) {
             var begin = new Date(item.begindate).getDate();
             var end = new Date(item.enddate).getDate();
             if(askingDate >= begin && askingDate <= end) {
-                console.log("false");
+             //   console.log("false");
                resolve(false);
             }
             else {
-                console.log("none");
+            //    console.log("none");
             }
         });
-        console.log("true");
+       // console.log("true");
         resolve(true);
     })
 }   )
