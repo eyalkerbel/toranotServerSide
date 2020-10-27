@@ -4,8 +4,6 @@ const { ObjectId } = require('mongodb');
 
 function getDataForInitRedux(url,MongoClient,req,res,db) {
     var BearerHeader = req.headers["authorization"];
-    var splitted = BearerHeader.split(" ");
-    var BearerHeader = req.headers["authorization"];
   var splitted = BearerHeader.split(" ");
   jwt.verify(splitted[1], "iamthesecretkey", (err, verified) => {
     if (err !== null) {
@@ -13,11 +11,11 @@ function getDataForInitRedux(url,MongoClient,req,res,db) {
       return;
     }
     console.log(verified);
-    console.log(err);
+    //console.log(err);
       var obi = verified.payload;
       var _id = obi._id;
       const {permissionlvl} = verified.payload;
-      console.log("userid hadd",_id);
+     // console.log("userid hadd",_id);
       // MongoClient.connect(
       //   url,
       //   {
@@ -57,9 +55,9 @@ function getDataForInitRedux(url,MongoClient,req,res,db) {
             }}, {$unwind: "$userDetails"},{$match: {"monthTab": 1}}]).toArray();  
             const promise8 = dbo.collection("haadafottest").find({ idUser:ObjectId(_id)}).toArray();
             const promsie9 = dbo.collection("haadafottest").find().toArray();
-            console.log("saas");
+           // console.log("saas");
           Promise.all([promise1,promise2,promise3,promise4,promise5,promise6,promise7,promise8,promsie9]).then(values => {
-             console.log("values" , values)
+           //  console.log("values" , values)
             res.status(200).json(values);
           //  db.close();
           });
