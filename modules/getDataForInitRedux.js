@@ -55,8 +55,9 @@ function getDataForInitRedux(url,MongoClient,req,res,db) {
             }}, {$unwind: "$userDetails"},{$match: {"monthTab": 1}}]).toArray();  
             const promise8 = dbo.collection("haadafottest").find({ idUser:ObjectId(_id)}).toArray();
             const promsie9 = dbo.collection("haadafottest").find().toArray();
+            const promise10 = dbo.collection("jobs").find().toArray();
            // console.log("saas");
-          Promise.all([promise1,promise2,promise3,promise4,promise5,promise6,promise7,promise8,promsie9]).then(values => {
+          Promise.all([promise1,promise2,promise3,promise4,promise5,promise6,promise7,promise8,promsie9,promise10]).then(values => {
            //  console.log("values" , values)
             res.status(200).json(values);
           //  db.close();
