@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
+const { ObjectId } = require('mongodb');
 
-function createUser(url, MongoClient, req, res) {
+function createUser(url, MongoClient, req, res,db) {
     var data = req.body;
     console.log("data",data);
     var BearerHeader = req.headers["authorization"];
@@ -38,26 +39,27 @@ function createUser(url, MongoClient, req, res) {
           //const ValidOrNot = Joi.validate(data, schema);
           //  console.log(ValidOrNot);
           //  if (ValidOrNot.error === null) {
-              if(true) {
-                MongoClient.connect(
-                    url,
-                    {
-                        useNewUrlParser: true,
-                        useUnifiedTopology: true
-                    },
-                    function (err, db) {
-                        if (err) throw err;
+            //   if(true) {
+            //     MongoClient.connect(
+            //         url,
+            //         {
+            //             useNewUrlParser: true,
+            //             useUnifiedTopology: true
+            //         },
+            //         function (err, db) {
+            //             if (err) throw err;
                         var dbo = db.db("newmaindb");
                      console.log("succsedd");
-                     dbo.collection("users").insertOne(data);
-                        db.close();
-                        res.status(200).json("success");
-                    }
-                );
-            } else {
-                res.status(400).json("schema blocked")
-                console.log("schema blocked")
-            }
+                     data["type"] = ObjectId(data.type);
+                     dbo.collection("users").insertOne(data).then(() =>   res.status(200).json("success"));
+                     //     });
+                       // db.close();
+                      
+                // );
+            // } else {
+            //     res.status(400).json("schema blocked")
+            //     console.log("schema blocked")
+            // }
         } else {
             res.status(400).json("not an admin");
         }
