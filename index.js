@@ -89,7 +89,7 @@ register(url,MongoClient,req,res );
 //not finished create user
 app.post("/api/createuser", (req, res) => {
   console.log("hi");
-  createUser(url, MongoClient, req, res);
+  createUser(url, MongoClient, req, res,app.locals.db);
 });
 
 //gets this months toranuts and verifies
