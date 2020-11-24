@@ -66,7 +66,8 @@ function AddToranotThisMonth(dbo,data) {
                   idUser: id,
                   userStatus: "unknown",
                   availableForExchange: true,
-                  toran: data.toran
+                  toran: data.toran,
+                  shmiraType: data.shmiraType
               };
               return newData;
           }).then(function(newData) {

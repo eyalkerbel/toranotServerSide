@@ -28,7 +28,7 @@ function addJobs(req,res,db) {
         //     });
         // });
 
-        
+        console.log("dataAddJob" , req.body);
         const {action , values} = req.body;
         if(action == "add") {
             delete values['_id'];
