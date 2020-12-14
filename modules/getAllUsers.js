@@ -80,8 +80,7 @@ function getAllUsers(url,MongoClient,req,res) {
              ]).toArray().then(result => resolve(result)));
 
              Promise.all([promise1,promise2]).then(async values => {
-                // console.log("result 1" ,  divideArrayByAlgo(values[0],allUsers) ,"&********");
-                //  console.log("result 2"  , divideArrayByAlgo(values[1],allUsers));
+            
                 const thisMonth = new Promise(resolve => resolve(divideArrayByAlgo(values[0],allUsers,0)));
                 const nextMonth = new Promise(resolve => resolve(divideArrayByAlgo(values[1],allUsers,1)));
                 Promise.all([thisMonth,nextMonth]).then(values => {
@@ -90,111 +89,6 @@ function getAllUsers(url,MongoClient,req,res) {
                     res.json(values);
                     db.close();
                 });
-            //    res.status(400).json("waiting");
-                //         res.json(allTemp);
-        //         db.close();
-         //    });
-            // dbo.collection("toranim").find({"monthTab":1}).toArray(function(err,usersNextMonth){
-            // var nextMonthTemp = [[]];
-            // var nextMonthNot = [];
-            // console.log("userNextMonth" , usersNextMonth);
-            // if( usersNextMonth.length != 0) {
-            // for(var i=0;i<allUsers.length;i++) {
-            //     var isEqual = false;
-
-            //     for(var j=0;j<usersNextMonth.length;j++) {
-            //         console.log(usersNextMonth[j]._id , " ," , allUsers[i]._id);
-            //         if(usersNextMonth[j]._id == allUsers[i]._id) {
-            //             isEqual = true;
-            //         }
-            //     }
-            //     if(isEqual == false) {
-            //         nextMonthNot.push(allUsers[i]);
-            //          }
-            // }
-            //  } else {
-            //         nextMonthNot = allUsers;
-            //         usersNextMonth = [];
-            //     }
-            
-            //     nextMonthTemp[0] = usersNextMonth;
-            //     nextMonthTemp[1] = nextMonthNot;
-            //     allTemp[1] = nextMonthTemp;
-            //     console.log("get all users finsih" , allTemp);
-            //     res.json(allTemp);
-            //     db.close();
-        // });
-       
-        // });
-
-
-        // dbo.collection("users").find({}).toArray( function( err, allUsers){
-        //     console.log("allusers" , allUsers , err);
-        // dbo.collection("toranimThisMonth").find({}).toArray(function(err,usersMonth){
-        //     var thisMonthTemp = [[]];
-        //     var thisMonthNot = [];
-        //     console.log("userMonth" ,usersMonth.length);
-        //     if( usersMonth.length != 0) {
-        //             console.log("no-extreme");
-        //         for(var i=0;i<allUsers.length;i++) {
-                
-        //             console.log("index" , usersMonth.indexOf(allUsers[i])) //Todo: fix this issue
-
-        //             var isEqual = false;
-        //             for(var j=0;j<usersMonth.length;j++) {
-        //                 console.log(usersMonth[j]._id , " ," , allUsers[i]._id);
-        //                 if(usersMonth[j]._id == allUsers[i]._id) {
-        //                     isEqual = true;
-        //                 }
-        //             }
-        //         if(isEqual == false) {
-        //             thisMonthNot.push(allUsers[i]);
-        //         }
-        //         }
-        //      } else {
-        //             console.log("extreme");
-        //             thisMonthNot = allUsers;
-        //             usersMonth = [];
-                
-        //     }
-        //     console.log("usersMonth" , usersMonth);
-        //         thisMonthTemp[0] = usersMonth;
-        //         thisMonthTemp[1] = thisMonthNot;
-        //         allTemp[0] = thisMonthTemp;
-        //         console.log("finish thismonth" , thisMonthTemp[0] , ", x " , thisMonthTemp[1]  );
-        // });
-        // dbo.collection("toranimNextMonth").find({}).toArray(function(err,usersNextMonth){
-        //     var nextMonthTemp = [[]];
-        //     var nextMonthNot = [];
-        //     console.log("userNextMonth" , usersNextMonth);
-        //     if( usersNextMonth.length != 0) {
-        //     for(var i=0;i<allUsers.length;i++) {
-        //         var isEqual = false;
-
-        //         for(var j=0;j<usersNextMonth.length;j++) {
-        //             console.log(usersNextMonth[j]._id , " ," , allUsers[i]._id);
-        //             if(usersNextMonth[j]._id == allUsers[i]._id) {
-        //                 isEqual = true;
-        //             }
-        //         }
-        //         if(isEqual == false) {
-        //             nextMonthNot.push(allUsers[i]);
-        //              }
-        //     }
-        //      } else {
-        //             nextMonthNot = allUsers;
-        //             usersNextMonth = [];
-        //         }
-            
-        //         nextMonthTemp[0] = usersNextMonth;
-        //         nextMonthTemp[1] = nextMonthNot;
-        //         allTemp[1] = nextMonthTemp;
-        //         console.log("get all users finsih" , allTemp);
-        //         res.json(allTemp);
-        //         db.close();
-        // });
-       
-        // });
         
              });
       });

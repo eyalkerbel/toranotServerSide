@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const Joi = require('joi');
 const { ObjectId } = require('mongodb');
 
-function setHaadafot(url, MongoClient, req, res,db) {
+function setHaadafot(url, MongoClient, req, res, db) {
   var BearerHeader = req.headers["authorization"];
   var splitted = BearerHeader.split(" ");
   jwt.verify(splitted[1], "iamthesecretkey", (err, verified) => {
@@ -25,7 +25,7 @@ function setHaadafot(url, MongoClient, req, res,db) {
     //     element.idUser = ObjectId(obi._id);
     //   });
     //  console.log(arriOfHaadafot);
-      
+
 
     //   MongoClient.connect(
     //     url,
@@ -35,46 +35,35 @@ function setHaadafot(url, MongoClient, req, res,db) {
     //     },
     //     function (err, db) {
     //       if (err) throw err;
-          var dbo = db.db("newmaindb");
-          // dbo.collection("haadafottest").deleteMany({
-          //   userid
-          // });
-         // console.log("arriofHaadafot" , arriOfHaadafot);
+    var dbo = db.db("newmaindb");
+    // dbo.collection("haadafottest").deleteMany({
+    //   userid
+    // });
+    // console.log("arriofHaadafot" , arriOfHaadafot);
 
-          console.log("req.body" , req.body);
-          const {action} = req.body;
-          if(action == "add") {
-            const {data} = req.body;
-            data["idUser"] = ObjectId(verified.payload._id);
-            dbo.collection("haadafottest").insertOne(data).then(item => {
-             res.json(item.ops[0]);
-            });
-          } else if(action == "delete") {
-            const {data} = req.body;
-            dbo.collection("haadafottest").deleteOne({"_id": ObjectId(data)});
-          } else {
-            const {data} = req.body;
-            data["idUser"] = ObjectId(verified.payload._id);
-            var id = data._id;
-            delete data._id;
-            dbo.collection("haadafottest").replaceOne({"_id": ObjectId(id)} , data );
-          }
-
-
+    console.log("req.body", req.body);
+    const { action } = req.body;
+    if (action == "add") {
+      const { data } = req.body;
+      data["idUser"] = ObjectId(verified.payload._id);
+      dbo.collection("haadafottest").insertOne(data).then(item => {
+        res.json(item.ops[0]);
+      });
+    } else if (action == "delete") {
+      const { data } = req.body;
+      dbo.collection("haadafottest").deleteOne({ "_id": ObjectId(data) });
+    } else {
+      const { data } = req.body;
+      data["idUser"] = ObjectId(verified.payload._id);
+      var id = data._id;
+      delete data._id;
+      dbo.collection("haadafottest").replaceOne({ "_id": ObjectId(id) }, data);
+    }
 
 
-          // dbo.collection("haadafottest").insert(arriOfHaadafot).then(items => {
-          //     res.status(200).json("challenge accepted");
-          //     db.close();
-          //   });
-          
-            
-          // });
-         
-
-        });
- //   }
- // });
+  });
+  //   }
+  // });
 }
 
 

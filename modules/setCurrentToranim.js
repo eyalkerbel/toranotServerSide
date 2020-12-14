@@ -2,7 +2,7 @@ const { ObjectId } = require("mongodb");
 const jwt = require("jsonwebtoken");
 
 
-function setCurrentToranim(url,MongoClient,req,res) {
+function setCurrentToranim(url,MongoClient,req,res,db) {
     var BearerHeader = req.headers["authorization"];
     var splitted = BearerHeader.split(" ");
     jwt.verify(splitted[1], "iamthesecretkey", (err, verified) => {
@@ -15,22 +15,10 @@ function setCurrentToranim(url,MongoClient,req,res) {
       var userid = obi.userid;
       console.log("req.body settoran" , req.body.arrayUsers);
       const {arrayUsers} = req.body
-   //   console.log("toranimThisMonth" , arrayUsers);
-     // console.log("userid hadd",userid);
-      MongoClient.connect(
-        url,
-        {
-          useNewUrlParser: true,
-          useUnifiedTopology: true
-        },
-        function (err, db) {
+ 
           if (err) throw err;
           var dbo = db.db("newmaindb");
 
-   // //    dbo.collection("toranimThisMonth").deleteMany({},function(err,response) {
-   // //       });
-   // //       dbo.collection("toranimNextMonth").deleteMany({},function(err,response) {
-   // //     });
    console.log("*******start********");
    dbo.collection("toranim").createIndex({idUser: 1, monthTab:1 });
 
@@ -40,23 +28,42 @@ function setCurrentToranim(url,MongoClient,req,res) {
 
                     var toranObject = {
                     idUser:new ObjectId(element.item.userDetails._id),
-                    monthTab: element.monthValue
+                    monthTab: element.monthValue,
                     }
                     console.log("enter to add" , toranObject );
 
-                    const promise = dbo.collection("toranim").insert(toranObject);
+                    const promise = new Promise(resolve => dbo.collection("toranim").insertOne(toranObject).then((element1) => {
+                      // console.log("finsh add toranot",element.ops[0]);
+                      //  resolve({id: element1.ops[0]  ,index: element.index});
+                      element1.ops[0]["userDetails"] = element.item.userDetails;
+                      resolve(element1.ops[0]);
+                    }));
                     promiseArray.push(promise);
                 }
                 if(element.isChosen == true) {
                     console.log("enter to delete" , element.item.userDetails._id );
-                    const promise = dbo.collection("toranim").deleteOne({"idUser":new ObjectId(element.item.userDetails._id), "monthTab":element.item.monthTab});
+                    const promise = new Promise(resolve => dbo.collection("toranim").deleteOne({"idUser":new ObjectId(element.item.userDetails._id), "monthTab":element.item.monthTab})
+                    .then((element) => {
+                      resolve(false);
+                    }));
+                    ;
                     promiseArray.push(promise);
                 } 
             }
             Promise.all(promiseArray).then(values => {
                 console.log("finish-setToranim",);
-                res.status(200).json("succsess");
-                db.close();
+                var temp = [];
+                for(var i=0;i<promiseArray.length;i++) {
+                  console.log("(promiseArray[i]" , values[i]);
+                  if(values[i] != false) {
+                    temp.push(values[i])
+                  }
+                }
+                console.log("values" , temp);
+
+
+                res.status(200).json(temp);
+                // db.close();
             });
 
    
@@ -100,7 +107,7 @@ function setCurrentToranim(url,MongoClient,req,res) {
         //         }
         //     }
 
-        });
+        // });
 });
 }
 module.exports = setCurrentToranim;
