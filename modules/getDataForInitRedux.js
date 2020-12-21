@@ -66,14 +66,54 @@ function getDataForInitRedux(url, MongoClient, req, res, db) {
     const promsie9 = dbo.collection("haadafottest").find().toArray();
     const promise10 = dbo.collection("jobs").find().toArray();
     const promise11 = getExchangesAndTornot(dbo, verified);
+    const promise12 = dbo.collection("toranotexchanges").aggregate([
+      { $match: { status: "convincing" } },
+      {
+        $lookup:
+        {
+          from: "toranots",
+          localField: "toranotIdOld",
+          foreignField: "_id",
+          as: "toranotOld"
+        }
+      }, {
+        $unwind: {
+          path: "$toranotOld",
+          preserveNullAndEmptyArrays: true
+        }
+      }, {
+        $lookup: {
+          from: "users",
+          localField: "toranotOld.idUser",
+          foreignField: "_id",
+          as: "toranotOld.userDetails"
+        }
+      }, { $unwind: "$toranotOld.userDetails" },
+      {
+        $lookup: {
+          from: "toranots",
+          localField: "toranotIdNew",
+          foreignField: "_id",
+          as: "toranotNew"
+        }
+      }, { $unwind: "$toranotNew" },
+      {
+        $lookup:
+        {
+          from: "users",
+          localField: "toranotNew.idUser",
+          foreignField: "_id",
+          as: "toranotNew.userDetails"
+        }
+      }, { $unwind: "$toranotNew.userDetails" },
 
+    ]).toArray();
 
 
     // console.log("saas");
-    Promise.all([promise1, promise2, promise3, promise4, promise5, promise6, promise7, promise8, promsie9, promise10, promise11]).then(values => {
+    Promise.all([promise1, promise2, promise3, promise4, promise5, promise6, promise7, promise8, promsie9, promise10, promise11, promise12]).then(values => {
       //  console.log("values" , values)
 
-      console.log("promise 11", promise11);
       values[4].map(el => {
         if (el.toranotObject != undefined) {
           el["toranot"] = el.toranotObject;
@@ -88,7 +128,77 @@ function getDataForInitRedux(url, MongoClient, req, res, db) {
 }
 function returnNotificationByValue(dbo, idUser, permissionlvl) {
   if (permissionlvl == "admin") {
-    return dbo.collection("notificationsManager").find({}).toArray();
+    // return dbo.collection("notificationsManager").find({}).toArray();
+    return dbo.collection("notificationsManager").aggregate([
+      {
+        $lookup: {
+          from: "toranotexchanges",
+          localField: "exchange",
+          foreignField: "_id",
+          as: "exchangeObject"
+        }
+      }, {
+        $unwind: {
+          path: "$exchangeObject",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: "toranots",
+          localField: "exchangeObject.toranotIdOld",
+          foreignField: "_id",
+          as: "exchangeObject.toranotOldObject"
+        }
+      }, {
+        $unwind: {
+          path: "$exchangeObject.toranotOldObject",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: "toranots",
+          localField: "exchangeObject.toranotIdNew",
+          foreignField: "_id",
+          as: "exchangeObject.toranotNewObject"
+        }
+      }, {
+        $unwind: {
+          path: "$exchangeObject.toranotNewObject",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "exchangeObject.toranotOldObject.idUser",
+          foreignField: "_id",
+          as: "exchangeObject.toranotOldObject.userDetails"
+        }
+      }, {
+        $unwind: {
+          path: "$exchangeObject.toranotOldObject.userDetails",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "exchangeObject.toranotNewObject.idUser",
+          foreignField: "_id",
+          as: "exchangeObject.toranotNewObject.userDetails"
+        }
+      }, {
+        $unwind: {
+          path: "$exchangeObject.toranotNewObject.userDetails",
+          preserveNullAndEmptyArrays: true
+        }
+      }]).toArray();
+
+
+
+
   } else {
     return dbo.collection("notifications").aggregate([
       {
@@ -135,6 +245,7 @@ function getExchangesAndTornot(dbo, verified) {
   return new Promise(resolve => {
     var obi = verified.payload;
     var idUser = obi._id;
+    const { type } = obi;
     const promise1 = new Promise(resolve => dbo.collection("toranots").find({ "idUser": new ObjectId(idUser), "monthTab": 0 }).toArray().then(result => getToranotItemForFronted(dbo, result)).then(res => resolve(res)));
     const promise2 = new Promise(resolve => dbo.collection("toranots").find({ "idUser": new ObjectId(idUser), "monthTab": 1 }).toArray().then(async result => {
       var temp = await getToranotItemForFronted(dbo, result);
@@ -164,11 +275,11 @@ function getExchangesAndTornot(dbo, verified) {
           as: "toranotOld.userDetails"
         }
       }, { $unwind: "$toranotOld.userDetails" },
-      {
-        $match: {
-          $and: [{ "toranotOld.userDetails._id": ObjectId(idUser) }]
-        }
-      },
+      // {
+      //   $match: {
+      //     $and: [{ "toranotOld.userDetails._id": ObjectId(idUser) }]
+      //   }
+      // },
       {
         $lookup: {
           from: "toranots",
@@ -176,7 +287,13 @@ function getExchangesAndTornot(dbo, verified) {
           foreignField: "_id",
           as: "toranotNew"
         }
-      }, { $unwind: "$toranotNew" },
+      }, {
+        $unwind: {
+          path: "$toranotNew",
+          preserveNullAndEmptyArrays: true
+
+        },
+      },
       {
         $lookup: {
           from: "users",
@@ -184,7 +301,17 @@ function getExchangesAndTornot(dbo, verified) {
           foreignField: "_id",
           as: "toranotNew.userDetails"
         }
-      }, { $unwind: "$toranotNew.userDetails" },
+      }, {
+        $unwind: {
+          path: "$toranotNew.userDetails", preserveNullAndEmptyArrays: true
+        }
+      },
+      { // not equel 2 and idnot null
+        $match: {
+          $and: [{ "toranotOld.userDetails._id": ObjectId(idUser) }, { $or: [{ "toranotNew": { $ne: {} } }, { "typeExchange": 2 }] }]
+
+        }
+      }
     ]).toArray().then(result => resolve(result)));
 
     // const promise4 = new Promise(resolve => dbo.collection("toranotexchanges").find({'newDate.userid':userid}).toArray().then(result => resolve(result)))
@@ -197,7 +324,13 @@ function getExchangesAndTornot(dbo, verified) {
           foreignField: "_id",
           as: "toranotNew"
         }
-      }, { $unwind: "$toranotNew" },
+      }, {
+        $unwind: {
+          path: "$toranotNew",
+          preserveNullAndEmptyArrays: true
+
+        },
+      },
       {
         $lookup:
         {
@@ -206,10 +339,10 @@ function getExchangesAndTornot(dbo, verified) {
           foreignField: "_id",
           as: "toranotNew.userDetails"
         }
-      }, { $unwind: "$toranotNew.userDetails" },
+      }, { $unwind: { path: "$toranotNew.userDetails", preserveNullAndEmptyArrays: true } },
       {
         $match: {
-          $and: [{ "toranotNew.userDetails._id": ObjectId(idUser) }]
+          $or: [{ "toranotNew.userDetails._id": ObjectId(idUser) }, { $and: [{ "typeExchange": 2, "toranotIdNew": null, "rejectedIDS": { $not: { $all: [ObjectId(idUser)] } } }] }]
         }
       },
       {
@@ -234,7 +367,13 @@ function getExchangesAndTornot(dbo, verified) {
           foreignField: "_id",
           as: "toranotOld.userDetails"
         }
-      }, { $unwind: "$toranotOld.userDetails" }]).toArray().then(result => resolve(result)))
+      }, { $unwind: "$toranotOld.userDetails" },
+      {
+        $match: {
+          $and: [{ "toranotOld.userDetails.type": ObjectId(type) }]
+        }
+      },
+    ]).toArray().then(result => resolve(result)))
     const promise5 = new Promise(resolve => dbo.collection("toranotexchanges").aggregate([
       {
         $lookup:
@@ -283,7 +422,40 @@ function getExchangesAndTornot(dbo, verified) {
         }
       }, { $unwind: "$toranotOld.userDetails" }]).toArray().then(result => resolve(result)))
 
+    // const promise6 = new Promise(resolve => dbo.collection("toranotexchanges").aggregate([
+    //   {
+    //     $lookup:
+    //     {
+    //       from: "toranots",
+    //       localField: "toranotIdOld",
+    //       foreignField: "_id",
+    //       as: "toranotOld"
+    //     }
+    //   }, {
+    //     $unwind: {
+    //       path: "$toranotOld",
+    //       preserveNullAndEmptyArrays: true
+    //     }
+    //   }, {
+    //     $match: {
+    //       $and: [{ "typeExchange": 2, "toranotIdNew": null ,  }]
+    //     }
+    //   },
+    //   {
+    //     $lookup:
+    //     {
+    //       from: "users",
+    //       localField: "toranotOld.idUser",
+    //       foreignField: "_id",
+    //       as: "toranotOld.userDetails"
+    //     }
+    //   },
+    //   { $unwind: "$toranotOld.userDetails" }]).toArray().then(result => resolve(result)))
+    // const promise6 = dbo.collection("toranotexchanges").find({ "typeExchange": 2, toranotIdNew: null }).toArray();
+
     Promise.all([promise1, promise2, promise3, promise4, promise5]).then(values => {
+
+      // values[3] = values[3].concat(values[5]);
       resolve(values);
     });
   });

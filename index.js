@@ -85,7 +85,7 @@ MongoClient.connect(
 
     app.post("/api/registeruser", (req, res) => {
       console.log("registekxkr");
-      register(url, MongoClient, req, res);
+      register(url, MongoClient, req, res, app.locals.db);
     });
     //not finished create user
     app.post("/api/createuser", (req, res) => {
@@ -95,7 +95,7 @@ MongoClient.connect(
 
     //gets this months toranuts and verifies
     app.post("/api/getthismonthstoranuts", (req, res) => {
-      getThisMonthsToranuts(url, MongoClient, req, res);
+      // getThisMonthsToranuts(url, MongoClient, req, res);
     });
     app.post("/api/getpioritybyuser", (req, res) => {
       // console.log("getpioritybyuserindex");
@@ -103,11 +103,11 @@ MongoClient.connect(
     });
 
     app.post("/api/deletenotifications", (req, res) => {
-      deleteNotifactionsByIndex(url, MongoClient, req, res);
+      deleteNotifactionsByIndex(url, MongoClient, req, res, app.locals.db);
     });
 
     app.post("/api/getpersondata", (req, res) => {
-      getPersonData(url, MongoClient, req, res);
+      //  getPersonData(url, MongoClient, req, res);
     });
     app.post("/api/settoranot", (req, res) => {
       setToranot(url, MongoClient, req, res, app.locals.db);
@@ -116,11 +116,11 @@ MongoClient.connect(
 
     app.post("/api/settoranutthismonth", (req, res) => {
       console.log("settoranutthismonth");
-      setToranutThisMonth(url, MongoClient, req, res);
+      // setToranutThisMonth(url, MongoClient, req, res);
     });
 
     app.post("/api/getallhaadafot", (req, res) => {
-      getAllHaadafot(url, MongoClient, req, res);
+      // getAllHaadafot(url, MongoClient, req, res);
     });
 
     app.post("/api/deletetoranot", (req, res) => {
@@ -129,16 +129,15 @@ MongoClient.connect(
     });
 
     app.post("/api/deletetoranutthismonth", (req, res) => {
-      console.log(123)
-      deleteToranutThisMonth(url, MongoClient, req, res);
+      // deleteToranutThisMonth(url, MongoClient, req, res);
     });
     app.post("/api/settoranutnextmonth", (req, res) => {
-      setToranutNextMonth(url, MongoClient, req, res);
+      //  setToranutNextMonth(url, MongoClient, req, res);
     });
 
     app.post("/api/deletetoranutnextmonth", (req, res) => {
       console.log(123)
-      deleteToranutNextMonth(url, MongoClient, req, res);
+      // deleteToranutNextMonth(url, MongoClient, req, res);
     });
 
     app.post("/api/getpiority", (req, res) => {
@@ -146,8 +145,8 @@ MongoClient.connect(
     });
 
     app.post("/api/gethaadafotbyuser", (req, res) => {
-      console.log("gethaadafotbyuser");
-      getHaadafotByUser(url, MongoClient, req, res);
+      // console.log("gethaadafotbyuser");
+      // getHaadafotByUser(url, MongoClient, req, res);
     });
 
     app.post("/api/getalltoranuts", (req, res) => {
@@ -155,11 +154,11 @@ MongoClient.connect(
     });
 
     app.post("/api/getnextmonthstoranuts", (req, res) => {
-      getNextMonthsToranuts(url, MongoClient, req, res);
+      // getNextMonthsToranuts(url, MongoClient, req, res);
     });
 
     app.post("/api/gethaadafot", (req, res) => {
-      getHaadafot(url, MongoClient, req, res);
+      // getHaadafot(url, MongoClient, req, res);
     });
 
     app.post("/api/sethaadafot", (req, res) => {
@@ -171,11 +170,11 @@ MongoClient.connect(
     });
 
     app.post("/api/sendmessage", (req, res) => {
-      sendMessage(url, MongoClient, req, res);
+      sendMessage(url, MongoClient, req, res, app.locals.db);
     });
 
     // app.post("/api/cancelrequest" ,(req,res) => {
-    //   cancelRequest(url,MongoClient,req,res);
+    //   cancelRequest(url,MongoClient,req,res,db , app.locals.db);
     // });
 
     app.post("/api/getmessagebyid", (req, res) => {
@@ -184,7 +183,7 @@ MongoClient.connect(
     });
 
     app.post("/api/getnotifaction", (req, res) => {
-      getNotifaction(url, MongoClient, req, res);
+      // getNotifaction(url, MongoClient, req, res);
     });
 
     app.post("/api/addtoranotchange", (req, res) => {
@@ -192,12 +191,12 @@ MongoClient.connect(
       addTotanotChange(url, MongoClient, req, res, app.locals.db);
     });
     app.post("/api/getexchangesandtoranot", (req, res) => {
-      getExchangesAndTornot(url, MongoClient, req, res);
+      //  getExchangesAndTornot(url, MongoClient, req, res);
     });
 
     app.post("/api/approveexchange", (req, res) => {
       console.log("approveexchangee");
-      approveExchange(url, MongoClient, req, res);
+      approveExchange(url, MongoClient, req, res, app.locals.db);
     });
 
     app.post("/api/getexchangeapprove", (req, res) => {
@@ -206,18 +205,18 @@ MongoClient.connect(
     });
     app.post("/api/updateexchangemanager", (req, res) => {
       console.log("updateFromManager");
-      updateExchangeAnswer(url, MongoClient, req, res);
+      updateExchangeAnswer(url, MongoClient, req, res, app.locals.db);
     });
 
     app.post("/api/sendmessageagain", (req, res) => {
-      SendMessageAgain(url, MongoClient, req, res);
+      SendMessageAgain(url, MongoClient, req, res, app.locals.db);
     });
     app.post("/api/sendstatusshmirot", (req, res) => {
-      sendStatusShmirot(url, MongoClient, req, res);
+      sendStatusShmirot(url, MongoClient, req, res, app.locals.db);
     });
 
     app.post("/api/getallusers", (req, res) => {
-      getAllUsers(url, MongoClient, req, res);
+      // getAllUsers(url, MongoClient, req, res);
     });
 
     app.post("/api/sendcurrenttoranim", (req, res) => {
@@ -225,7 +224,7 @@ MongoClient.connect(
     });
 
     app.post("/api/sendtoranimnextmonth", (req, res) => {
-      sendtoranimNextMonth(url, MongoClient, req, res);
+      // sendtoranimNextMonth(url, MongoClient, req, res);
     });
 
     app.post("/api/getdataforinitredux", (req, res) => {

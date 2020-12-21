@@ -17,23 +17,37 @@ function addTotanotChange(url, MongoClient, req, res, db) {
     } else {
       var userid = obi.sn;
     }
-    var name = obi.name;
-    console.log("userid hadd", req.body);
     var data = req.body;
-
     var dbo = db.db("newmaindb");
-    console.log("req body", req.body);
+    if (data.toranotIdNew != null) {
+      data["toranotIdNew"] = ObjectId(data.toranotIdNew);
+    }
+    if (data.toranotIdOld != null) {
+      data["toranotIdOld"] = ObjectId(data.toranotIdOld);
+    }
+    delete data.toranotNew;
+    delete data.toranotOld;
+    if (data.rejectedIDS != undefined) {
 
-    data["toranotIdNew"] = ObjectId(data.toranotIdNew);
-    data["toranotIdOld"] = ObjectId(data.toranotIdOld);
+      data["rejectedIDS"][0] = ObjectId(obi._id);
+    }
     //   await insertData(data);
     console.log("data", data);
     //   const promise1 = dbo.collection("notifications").insert(noti);
+    var freindId = null;
+    var userId = null;
 
-    var freindId = await GetIdPersonByToranotId(dbo, req.body.toranotIdOld);
-    var userId = await GetIdPersonByToranotId(dbo, req.body.toranotIdNew);
-    const promise1 = addNewNotification(dbo, ObjectId(req.body.toranotIdNew), userId, freindId, "wantExchange");
-    //const promise1 = addNewNotification(dbo,userd,freindId,ObjectId(req.body.toranotIdNew),"wantExchange")
+    if (req.body.toranotIdOld != null) {
+      var freindId = await GetIdPersonByToranotId(dbo, req.body.toranotIdOld);
+    }
+    if (req.body.toranotIdNew != null) {
+      var userId = await GetIdPersonByToranotId(dbo, req.body.toranotIdNew);
+    }
+    if (userId != null && freindId != null) {
+      const promise1 = addNewNotification(dbo, ObjectId(req.body.toranotIdNew), userId, freindId, "wantExchange");
+    } else {
+      const promise1 = new Promise(resolve => resolve(true));
+    }
     const promsie2 = dbo.collection("toranotexchanges").insert(data);
     Promise.all([promise1, promsie2]).then(values => {
       res.status(200).json("succeed");

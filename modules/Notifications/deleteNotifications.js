@@ -25,7 +25,6 @@ function deleteNotifications(dbo, idUser, selectValue) {
       //   }
       // } ]
       dbo.collection("notifications").find({ myId: ObjectId(idUser), $or: [{ action: "addToranot" }, { action: "deleteToranot" }] }).forEach(doc => {
-        console.log("doc", doc);
         // array.push(dbo.collection("notifications").deleteOne({"_id": doc._id}));
         array.push(dbo.collection("notifications").findOneAndUpdate({ "_id": doc._id }, { $set: { seen: true } }, { new: true }));
       }).then(() => {
@@ -60,7 +59,6 @@ function deleteNotifications(dbo, idUser, selectValue) {
       dbo.collection("notifications").find({ myId: ObjectId(idUser), action: "wantExchange" }).forEach(doc => {
 
         dbo.collection("notifications").findOneAndUpdate({ "_id": doc._id }, { $set: { seen: true } }, { new: true }).then(result => {
-          //  console.log("result" , result)
           resolve(true)
         });
       }));
@@ -88,7 +86,6 @@ function deleteNotifications(dbo, idUser, selectValue) {
       // ]
       dbo.collection("notifications").find({ myId: ObjectId(idUser), $or: [{ action: "toranApprove" }, { action: "toranReject" }] }).forEach(doc => {
 
-        console.log("doc", doc);
         // dbo.collection("notifications").findOneAndUpdate({ "_id": doc._id }, { $set: { seen: true } },{ new: true });
 
         return dbo.collection("notifications").findOneAndUpdate({ "_id": doc._id }, { $set: { seen: true } }, { new: true });
