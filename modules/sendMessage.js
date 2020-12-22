@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 
 
-async function sendMessage(url, MongoClient, req, res) {
+async function sendMessage(url, MongoClient, req, res, db) {
   var BearerHeader = req.headers["authorization"];
   var splitted = BearerHeader.split(" ");
   jwt.verify(splitted[1], "iamthesecretkey", (err, verified) => {
