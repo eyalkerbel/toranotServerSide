@@ -47,11 +47,17 @@ function approveExchange(url, MongoClient, req, res, db) {
     } else if (data.index.typeExchange == 2) {
       if (isApprove == true) {
         console.log("exchangessss###");
-        const promise1 = dbo.collection("toranotexchanges").updateMany({ "_id": ObjectId(exchange_id) }, { "$set": { "status": "agree", "newMessage": newMessage, toranotIdNew: ObjectId(item._id), } }, {});
+        dbo.collection("toranotexchanges").updateMany({ "_id": ObjectId(exchange_id) }, { "$set": { "status": "agree", "newMessage": newMessage, toranotIdNew: ObjectId(item._id), } }, {});
+        Promise.all([promise1]).then(values => {
+          res.status(200).json("succsees");
 
+        })
       } else {
         const promise1 = dbo.collection("toranotexchanges").updateMany({ "_id": ObjectId(exchange_id) }, { "$addToSet": { "rejectedIDS": ObjectId(idUser) } }, {});
+        Promise.all([promise1]).then(values => {
+          res.status(200).json("succsees");
 
+        })
       }
     }
 
