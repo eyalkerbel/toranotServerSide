@@ -59,6 +59,8 @@ function approveExchange(url, MongoClient, req, res, db) {
 
         })
       }
+    } else {
+      res.status(200).json("sasa");
     }
 
   });
