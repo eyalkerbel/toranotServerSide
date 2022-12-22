@@ -9,7 +9,7 @@
     "express": "^4.17.1",
     "fs": "0.0.1-security",
     "joi": "^14.3.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "mongodb": "^3.6.1",
     "node-cron": "^2.0.3",
     "react-notification-center": "^1.2.2",
